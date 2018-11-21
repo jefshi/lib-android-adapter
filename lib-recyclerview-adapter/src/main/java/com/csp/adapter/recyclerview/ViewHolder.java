@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorRes;
 import android.support.v7.widget.RecyclerView;
 import android.text.util.Linkify;
 import android.util.SparseArray;
@@ -31,21 +32,18 @@ import android.widget.TextView;
 public class ViewHolder extends RecyclerView.ViewHolder {
     private SparseArray<View> mViews;
     private View mConvertView;
+    private volatile SparseArray<Object> keyTagMap;
 
-    public ViewHolder(Context context, View itemView) {
+    public ViewHolder(View itemView) {
         super(itemView);
         mConvertView = itemView;
         mViews = new SparseArray<>();
     }
 
-    public static ViewHolder createViewHolder(Context context, View itemView) {
-        return new ViewHolder(context, itemView);
-    }
-
     public static ViewHolder createViewHolder(Context context, ViewGroup parent, int layoutId) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View itemView = inflater.inflate(layoutId, parent, false);
-        return new ViewHolder(context, itemView);
+        return new ViewHolder(itemView);
     }
 
     /**
@@ -69,13 +67,45 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return mConvertView.getContext();
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> T getTag(int key) {
+        return keyTagMap == null ? null : (T) keyTagMap.get(key);
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
+    public synchronized ViewHolder addTag(int key, Object value) {
+        if (keyTagMap == null) {
+            synchronized (this) {
+                if (keyTagMap == null)
+                    keyTagMap = new SparseArray<>();
+            }
+        }
+
+        keyTagMap.put(key, value);
+        return this;
+    }
+
+    public synchronized void removeTag(int key) {
+        if (keyTagMap != null)
+            keyTagMap.remove(key);
+    }
+
+    public synchronized void removeAllTag() {
+        if (keyTagMap != null)
+            keyTagMap.clear();
+    }
+
     // ==========
     // 以下为辅助方法
     // ==========
 
-    public ViewHolder setText(int viewId, String text) {
-        TextView tv = getView(viewId);
-        tv.setText(text);
+    public ViewHolder setText(int viewId, CharSequence text) {
+        ((TextView) getView(viewId)).setText(text);
+        return this;
+    }
+
+    public ViewHolder setText(int viewId, int resId) {
+        ((TextView) getView(viewId)).setText(resId);
         return this;
     }
 
@@ -109,9 +139,10 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    public ViewHolder setTextColor(int viewId, int textColor) {
+    public ViewHolder setTextColor(int viewId, @ColorRes int colorRes) {
         TextView view = getView(viewId);
-        view.setTextColor(textColor);
+        int color = getContext().getResources().getColor(colorRes);
+        view.setTextColor(color);
         return this;
     }
 
@@ -136,9 +167,8 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    public ViewHolder setVisible(int viewId, boolean visible) {
-        View view = getView(viewId);
-        view.setVisibility(visible ? View.VISIBLE : View.GONE);
+    public ViewHolder setVisibility(int viewId, int visibility) {
+        getView(viewId).setVisibility(visibility);
         return this;
     }
 
@@ -204,6 +234,16 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     public ViewHolder setChecked(int viewId, boolean checked) {
         Checkable view = getView(viewId);
         view.setChecked(checked);
+        return this;
+    }
+
+    public ViewHolder setSelected(int viewId, boolean selected) {
+        getView(viewId).setSelected(selected);
+        return this;
+    }
+
+    public ViewHolder setEnabled(int viewId, boolean enabled) {
+        getView(viewId).setEnabled(enabled);
         return this;
     }
 
