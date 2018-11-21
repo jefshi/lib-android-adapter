@@ -1,6 +1,7 @@
 package com.csp.adapter.recyclerview;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import com.csp.utillib.EmptyUtil;
-
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,17 +23,17 @@ import java.util.List;
  *
  * @param <T> 数据对象
  * @version 1.0.0
+ * @see SingleAdapter
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
-    protected Context mContext;
     protected LayoutInflater mInflater;
     protected List<T> mData;
 
-    private OnItemClickListener mOnItemClickListener;
-    private OnItemLongClickListener mOnItemLongClickListener;
-
     private SparseArray<IViewFill> mViewFillManager;
+
+    protected OnItemClickListener mOnItemClickListener;
+    protected OnItemLongClickListener mOnItemLongClickListener;
 
     /**
      * @see AdapterView#setOnItemClickListener(AdapterView.OnItemClickListener)
@@ -54,7 +54,6 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
     }
 
     public MultipleAdapter(Context context) {
-        mContext = context;
         mInflater = LayoutInflater.from(context);
         mData = new ArrayList<>();
 
@@ -78,6 +77,14 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
     /**
      * @see #addData(int, Collection, boolean)
      */
+    public void addData(T[] data, boolean append) {
+        List<T> dataList = Arrays.asList(data);
+        addData(-1, dataList, append);
+    }
+
+    /**
+     * @see #addData(int, Collection, boolean)
+     */
     public void addData(T datum, boolean append) {
         addData(-1, datum, append);
     }
@@ -93,13 +100,13 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
         if (!append)
             mData.clear();
 
-        if (EmptyUtil.isEmpty(data))
-            return;
-
-        if (position < 0)
-            mData.addAll(data);
-        else
-            mData.addAll(position, data);
+        if (data != null && !data.isEmpty()) {
+            if (position < 0)
+                mData.addAll(data);
+            else
+                mData.addAll(position, data);
+        }
+        onDataChanged();
     }
 
     /**
@@ -109,13 +116,13 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
         if (!append)
             mData.clear();
 
-        if (datum == null)
-            return;
-
-        if (position < 0)
-            mData.add(datum);
-        else
-            mData.add(position, datum);
+        if (datum != null) {
+            if (position < 0)
+                mData.add(datum);
+            else
+                mData.add(position, datum);
+        }
+        onDataChanged();
     }
 
     /**
@@ -123,12 +130,27 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
      */
     public void removeData(T datum) {
         mData.remove(datum);
+        onDataChanged();
+    }
+
+    /**
+     * @see Collection#clear()
+     */
+    public void clearData() {
+        mData.clear();
+        onDataChanged();
+    }
+
+    /**
+     * 数据变化时回调
+     */
+    public void onDataChanged() {
     }
 
     /**
      * 追加布局
      *
-     * @see #onBindViewHolder(ViewHolder, int)
+     * @see SingleAdapter#onBindViewHolder(ViewHolder, int)
      */
     protected MultipleAdapter addViewFill(int viewType, IViewFill viewHolder) {
         mViewFillManager.put(viewType, viewHolder);
@@ -137,7 +159,7 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
 
     /**
      * @return 获取布局
-     * @see #onBindViewHolder(ViewHolder, int)
+     * @see #getViewFillByPosition(int)
      */
     protected IViewFill getViewFill(int viewType) {
         return mViewFillManager.get(viewType);
@@ -147,6 +169,7 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
      * @return 获取布局
      * @see #getItemViewType(int)
      * @see #getViewFill(int)
+     * @see SingleAdapter#onBindViewHolder(ViewHolder, int)
      */
     protected IViewFill getViewFillByPosition(int position) {
         return getViewFill(getItemViewType(position));
@@ -157,33 +180,26 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         int layoutId = mViewFillManager.get(viewType).getLayoutId();
         View view = mInflater.inflate(layoutId, parent, false);
-        ViewHolder holder = ViewHolder.createViewHolder(mContext, view);
+        ViewHolder holder = new ViewHolder(view);
         onCreateViewHolder(holder);
         setOnClickListener(parent, holder);
         return holder;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        IViewFill viewFill = getViewFillByPosition(position);
-        viewFill.convert(holder, mData.get(position), position);
     }
 
     protected void onCreateViewHolder(ViewHolder holder) {
     }
 
     protected void setOnClickListener(final ViewGroup parent, final ViewHolder viewHolder) {
-        final int position = viewHolder.getAdapterPosition();
-
-        viewHolder.getConvertView().setOnClickListener((view) -> {
+        viewHolder.getConvertView().setOnClickListener(view -> {
+            int position = viewHolder.getAdapterPosition();
             if (mOnItemClickListener != null)
                 mOnItemClickListener.onItemClick(parent, view, viewHolder, position, -1);
         });
 
-        viewHolder.getConvertView().setOnClickListener((view) -> {
-            if (mOnItemLongClickListener != null)
-                mOnItemLongClickListener.onItemLongClick(parent, view, viewHolder, position, -1);
+        viewHolder.getConvertView().setOnLongClickListener(view -> {
+            int position = viewHolder.getAdapterPosition();
+            return mOnItemLongClickListener != null
+                    && mOnItemLongClickListener.onItemLongClick(parent, view, viewHolder, position, -1);
         });
     }
 
@@ -200,13 +216,13 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
         int getLayoutId();
 
         /**
-         * ViewHolder 数据填充
+         * ViewHolder 数据绑定
          *
          * @param holder ViewHolder
          * @param datum  对应数据
          * @param offset 数据偏移量
          */
-        void convert(ViewHolder holder, E datum, int offset);
+        void onBind(ViewHolder holder, E datum, int offset);
     }
 
     /**
@@ -222,13 +238,23 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
      */
     public interface OnItemLongClickListener {
 
-        void onItemLongClick(ViewGroup parent, View view, RecyclerView.ViewHolder viewHolder, int position, long id);
+        boolean onItemLongClick(ViewGroup parent, View view, RecyclerView.ViewHolder viewHolder, int position, long id);
     }
 
     /**
-     * 添加布局
+     * 添加布局，配合 onBindViewHolder() 使用，具体参考见 @see
      *
      * @see #addViewFill(int, IViewFill)
+     * @see SingleAdapter#addMultiViewFills()
+     * @see SingleAdapter#onBindViewHolder(ViewHolder, int)
      */
     protected abstract void addMultiViewFills();
+
+    /**
+     * 解析 XML，如果 ViewGroup 是 RecyclerView，那么保证 RecyclerView 已经执行过 setAdapter()
+     */
+    @SuppressWarnings("unchecked")
+    public View inflate(@LayoutRes int layoutId, ViewGroup parent) {
+        return mInflater.inflate(layoutId, parent, false);
+    }
 }

@@ -1,6 +1,7 @@
 package com.csp.adapter.recyclerview;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import java.util.Collection;
 
@@ -28,9 +29,11 @@ public abstract class SingleAdapter<T> extends MultipleAdapter<T> {
         addData(data, false);
     }
 
-    @Override
-    public int getItemCount() {
-        return mData.size();
+    public SingleAdapter(Context context, int layoutId, T[] data) {
+        super(context);
+
+        mLayoutId = layoutId;
+        addData(data, false);
     }
 
     @Override
@@ -42,10 +45,22 @@ public abstract class SingleAdapter<T> extends MultipleAdapter<T> {
             }
 
             @Override
-            public void convert(ViewHolder holder, T datum, int offset) {
-                SingleAdapter.this.convert(holder, datum, offset);
+            public void onBind(ViewHolder holder, T datum, int offset) {
+                SingleAdapter.this.onBind(holder, datum, offset);
             }
         });
+    }
+
+    @Override
+    public int getItemCount() {
+        return mData.size();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        IViewFill viewFill = getViewFillByPosition(position);
+        viewFill.onBind(holder, mData.get(position), position);
     }
 
     /**
@@ -56,9 +71,9 @@ public abstract class SingleAdapter<T> extends MultipleAdapter<T> {
     }
 
     /**
-     * {@link IViewFill#convert(ViewHolder, Object, int)}
+     * {@link IViewFill#onBind(ViewHolder, Object, int)}
      *
      * @param position 对应数据在列表中的位置
      */
-    protected abstract void convert(ViewHolder holder, T datum, int position);
+    protected abstract void onBind(ViewHolder holder, T datum, int position);
 }
