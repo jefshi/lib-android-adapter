@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.csp.adapter.recyclerview.HeadFootAdapter;
 import com.csp.sample.adapter.adapter.MixAdapter;
 import com.csp.sample.adapter.adapter.TagAdapter;
 import com.csp.sample.adapter.dto.TopDto;
@@ -33,10 +36,23 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "删除该标签：" + item, Toast.LENGTH_SHORT).show();
         });
 
-        // 多布局
+        // 多布局 + 头尾布局
         MixAdapter mixAdapter = new MixAdapter(this);
+        HeadFootAdapter adapter = new HeadFootAdapter(mixAdapter);
         rcvMultiple.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        rcvMultiple.setAdapter(mixAdapter);
+        rcvMultiple.setAdapter(adapter);
+
+        View view = adapter.addHeaderView(R.layout.item_tag, rcvMultiple);
+        ((TextView) view.findViewById(R.id.txt_tag)).setText("头布局");
+
+        view = adapter.addHeaderView(R.layout.item_tag, rcvMultiple);
+        ((TextView) view.findViewById(R.id.txt_tag)).setText("头布局二");
+
+        view = adapter.addFootView(R.layout.item_tag, rcvMultiple);
+        ((TextView) view.findViewById(R.id.txt_tag)).setText("尾布局");
+
+        view = adapter.addFootView(R.layout.item_tag, rcvMultiple);
+        ((TextView) view.findViewById(R.id.txt_tag)).setText("尾布局二");
 
         addData(tagAdapter);
         addData(mixAdapter);
