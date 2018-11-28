@@ -16,9 +16,9 @@ import java.util.List;
 /**
  * HeadFootAdapter - 追加头尾布局
  * Created by csp on 2018/08/30.
- * Modified by csp on 2018/09/12.
+ * Modified by csp on 2018/11/28.
  *
- * @version 1.0.1
+ * @version 1.0.2
  */
 @SuppressWarnings("unused")
 public class HeadFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
