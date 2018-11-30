@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 28
@@ -22,6 +23,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+//    lintOptions {
+//        abortOnError false
+//    }
 }
 
 dependencies {
@@ -32,4 +37,20 @@ dependencies {
     // testImplementation 'junit:junit:4.12'
     // androidTestImplementation 'com.android.support.test:runner:1.0.2'
     // androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
+publish {
+    bintrayUser = '${BINTRAY_USER}'
+    bintrayKey = '${BINTRAY_API_KEY}'
+
+    userOrg = 'cjef'
+    repoName = 'maven'
+    uploadName = 'RecyclerViewAdapter'
+
+    groupId = 'com.csp'
+    artifactId = 'adapter.recyclerview'
+    publishVersion = '1.0.0'
+
+    desc = 'Android RecyclerView 通用适配器，支持多布局、单布局、头尾布局'
+    website = 'https://github.com/jefshi/RecyclerViewAdapter'
 }
