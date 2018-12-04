@@ -21,6 +21,9 @@ public class MixAdapter extends MultipleAdapter<TopDto> {
         super(context);
     }
 
+    /**
+     * 添加布局（布局数据类型可以不同）
+     */
     @Override
     protected void addMultiViewFills() {
         addViewFill(TOP_LAYOUT, new TopViewFill());
@@ -54,6 +57,9 @@ public class MixAdapter extends MultipleAdapter<TopDto> {
         return mItemViewType.get(position);
     }
 
+    /**
+     * 只负责将数据分配给对应的布局
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
