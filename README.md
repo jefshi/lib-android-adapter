@@ -34,6 +34,7 @@ public class TagAdapter extends SingleAdapter<String> {
 
 ## 多布局使用：
 [sample - MixAdapter](./sample/src/main/java/com/csp/sample/adapter/adapter/MixAdapter.java)
+
 [sample - TitleViewFill](./sample/src/main/java/com/csp/sample/adapter/adapter/TitleViewFill.java)
 
 ``` java
