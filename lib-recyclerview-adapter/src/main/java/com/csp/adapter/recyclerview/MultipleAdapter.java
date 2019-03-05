@@ -99,7 +99,7 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
      *
      * @param position 添加位置, -1: 添加在末尾
      * @param data     数据
-     * @param append   false: 重置数据
+     * @param append   是否追加到列表末尾。false: 重置数据
      */
     public void addData(int position, Collection<T> data, boolean append) {
         if (!append)
@@ -184,16 +184,22 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
     }
 
     protected void setOnClickListener(final ViewGroup parent, final ViewHolder viewHolder) {
-        viewHolder.getConvertView().setOnClickListener(view -> {
-            int position = viewHolder.getAdapterPosition();
-            if (mOnItemClickListener != null)
-                mOnItemClickListener.onItemClick(parent, view, viewHolder, position, -1);
+        viewHolder.getConvertView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position = viewHolder.getAdapterPosition();
+                if (mOnItemClickListener != null)
+                    mOnItemClickListener.onItemClick(parent, view, viewHolder, position);
+            }
         });
 
-        viewHolder.getConvertView().setOnLongClickListener(view -> {
-            int position = viewHolder.getAdapterPosition();
-            return mOnItemLongClickListener != null
-                    && mOnItemLongClickListener.onItemLongClick(parent, view, viewHolder, position, -1);
+        viewHolder.getConvertView().setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                int position = viewHolder.getAdapterPosition();
+                return mOnItemLongClickListener != null
+                        && mOnItemLongClickListener.onItemLongClick(parent, view, viewHolder, position);
+            }
         });
     }
 
@@ -225,7 +231,15 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
      */
     public interface OnItemClickListener {
 
-        void onItemClick(ViewGroup parent, View view, RecyclerView.ViewHolder viewHolder, int position, long id);
+        /**
+         * Item 的点击事件
+         *
+         * @param parent     即 Item 所在的 RecyclerView 对象
+         * @param view       被点击的 View
+         * @param viewHolder 被点击的 View 所属 Item 的 ViewHolder
+         * @param position   被点击的 View 所属 Item 的 position
+         */
+        void onItemClick(ViewGroup parent, View view, ViewHolder viewHolder, int position);
     }
 
     /**
@@ -233,7 +247,15 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
      */
     public interface OnItemLongClickListener {
 
-        boolean onItemLongClick(ViewGroup parent, View view, RecyclerView.ViewHolder viewHolder, int position, long id);
+        /**
+         * Item 的长按事件
+         *
+         * @param parent     即 Item 所在的 RecyclerView 对象
+         * @param view       被点击的 View
+         * @param viewHolder 被点击的 View 所属 Item 的 ViewHolder
+         * @param position   被点击的 View 所属 Item 的 position
+         */
+        boolean onItemLongClick(ViewGroup parent, View view, ViewHolder viewHolder, int position);
     }
 
     /**
