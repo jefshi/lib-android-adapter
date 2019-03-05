@@ -10,6 +10,25 @@ dependencies {
 }
 ```
 
+## 外围使用：
+[sample - MainActivity](./sample/src/main/java/com/csp/sample/adapter/MainActivity.java)
+
+``` java
+RecyclerView rcvSingle = findViewById(R.id.rcv_single);
+TagAdapter tagAdapter = new TagAdapter(this);
+rcvSingle.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+rcvSingle.setAdapter(tagAdapter);
+
+tagAdapter.setOnItemClickListener((parent, view, holder, position) -> {
+    String item = tagAdapter.getItem(position);
+    Toast.makeText(this, "删除该标签：" + item, Toast.LENGTH_SHORT).show();
+});
+
+List<String> tags = getTags();
+tagAdapter.addData(tags, false);
+tagAdapter.notifyDataSetChanged();
+```
+
 ## 单布局使用：
 [sample - TagAdapter](./sample/src/main/java/com/csp/sample/adapter/adapter/TagAdapter.java)
 ``` java
