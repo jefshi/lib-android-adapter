@@ -31,13 +31,22 @@ public class MainActivity extends AppCompatActivity {
         rcvSingle.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         rcvSingle.setAdapter(tagAdapter);
 
-        tagAdapter.setOnItemClickListener((parent, view, holder, position, id) -> {
+        tagAdapter.setOnItemClickListener((parent, view, holder, position) -> {
             String item = tagAdapter.getItem(position);
             Toast.makeText(this, "删除该标签：" + item, Toast.LENGTH_SHORT).show();
         });
 
-        // 多布局 + 头尾布局
+        List<String> tags = getTags();
+        tagAdapter.addData(tags, false);
+        tagAdapter.notifyDataSetChanged();
+
+        // 多布局
         MixAdapter mixAdapter = new MixAdapter(this);
+        List<TopDto> tops = getTops();
+        mixAdapter.addData(tops, false);
+        mixAdapter.notifyDataSetChanged();
+
+        // 多布局 + 头尾布局
         HeadFootAdapter adapter = new HeadFootAdapter(mixAdapter);
         rcvMultiple.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rcvMultiple.setAdapter(adapter);
@@ -53,12 +62,9 @@ public class MainActivity extends AppCompatActivity {
 
         view = adapter.addFootView(R.layout.item_tag, rcvMultiple);
         ((TextView) view.findViewById(R.id.txt_tag)).setText("尾布局二");
-
-        addData(tagAdapter);
-        addData(mixAdapter);
     }
 
-    private void addData(TagAdapter adapter) {
+    private List<String> getTags() {
         List<String> list = new ArrayList<>();
         list.add("角色扮演");
         list.add("动作");
@@ -74,11 +80,10 @@ public class MainActivity extends AppCompatActivity {
         list.add("消除");
         list.add("音乐节奏");
         list.add("育成");
-        adapter.addData(list, true);
-        adapter.notifyDataSetChanged();
+        return list;
     }
 
-    private void addData(MixAdapter adapter) {
+    private List<TopDto> getTops() {
         List<TopDto> list = new ArrayList<>();
 
         TopDto top = new TopDto();
@@ -122,8 +127,6 @@ public class MainActivity extends AppCompatActivity {
         top.setGameGrade("B");
         top.setGameService("日服");
         list.add(top);
-
-        adapter.addData(list, false);
-        adapter.notifyDataSetChanged();
+        return  list;
     }
 }

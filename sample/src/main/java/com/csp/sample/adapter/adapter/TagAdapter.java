@@ -27,7 +27,7 @@ public class TagAdapter extends SingleAdapter<String> {
             notifyDataSetChanged();
 
             if (mOnItemClickListener != null)
-                mOnItemClickListener.onItemClick(null, null, holder, position, -1);
+                mOnItemClickListener.onItemClick(null, v, holder, position);
         });
     }
 }
