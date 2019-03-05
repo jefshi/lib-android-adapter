@@ -1,121 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--xmlns:tools="http://schemas.android.com/tools"-->
-    <!--android:id="@+id/card_top"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginBottom="16dp"-->
-    <!--android:layout_marginLeft="16dp"-->
-    <!--android:layout_marginRight="16dp"-->
-    <!--app:cardCornerRadius="10dp"-->
-    <!--app:cardElevation="5dp">-->
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <android.support.constraint.ConstraintLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <ImageView
+        android:id="@+id/img_background"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="200dp"
+        android:background="@drawable/ic_backgroud"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_blind" />
 
-        <ImageView
-            android:id="@+id/img_background"
-            android:src="@drawable/ic_blind"
-            android:background="@drawable/ic_backgroud"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="fitXY" />
+    <ImageView
+        android:id="@+id/img_logo"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="14dp"
+        android:layout_marginStart="14dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <!--<android.support.v7.widget.CardView-->
-            <!--android:id="@+id/card_log"-->
-            <!--android:layout_width="48dp"-->
-            <!--android:layout_height="48dp"-->
-            <!--android:layout_marginBottom="14dp"-->
-            <!--android:layout_marginStart="14dp"-->
-            <!--app:cardCornerRadius="10dp"-->
-            <!--app:cardElevation="0dp"-->
-            <!--app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--app:layout_constraintStart_toStartOf="parent">-->
+    <TextView
+        android:id="@+id/txt_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:maxWidth="120dp"
+        android:minWidth="20dp"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/img_logo"
+        app:layout_constraintTop_toTopOf="@+id/img_logo" />
 
-            <ImageView
-                android:id="@+id/img_logo"
-                android:src="@drawable/ic_logo"
-    android:layout_marginBottom="14dp"
-    android:layout_marginStart="14dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:scaleType="centerCrop" />
+    <TextView
+        android:id="@+id/txt_booster"
+        android:layout_width="wrap_content"
+        android:layout_height="22dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="6dp"
+        android:background="@drawable/shape_corners_solid_ccffffff"
+        android:gravity="center"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        android:text="日服"
+        android:textColor="#2C2F3E"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_label"
+        app:layout_constraintStart_toEndOf="@+id/txt_label"
+        app:layout_constraintTop_toTopOf="@+id/txt_label" />
 
-        <!--</android.support.v7.widget.CardView>-->
+    <TextView
+        android:id="@+id/txt_describe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginStart="0dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:maxWidth="180dp"
+        android:minWidth="20dp"
+        android:textColor="#FFFFFF"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/img_logo"
+        app:layout_constraintStart_toStartOf="@+id/txt_label" />
 
-        <!--<ImageView-->
-            <!--android:id="@+id/img_refresh"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginEnd="16dp"-->
-            <!--android:scaleType="centerCrop"-->
-            <!--android:src="@drawable/ic_refresh"-->
-            <!--app:layout_constraintEnd_toEndOf="parent" />-->
+    <ImageView
+        android:id="@+id/img_grade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="13dp"
+        android:layout_marginTop="0dp"
+        android:minHeight="10dp"
+        android:minWidth="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/img_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/img_logo" />
 
-        <TextView
-            android:id="@+id/txt_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="6dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:maxWidth="120dp"
-            android:minWidth="20dp"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            app:layout_constraintStart_toEndOf="@+id/img_logo"
-            app:layout_constraintTop_toTopOf="@+id/img_logo" />
-
-        <TextView
-            android:id="@+id/txt_booster"
-            android:layout_width="wrap_content"
-            android:layout_height="22dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="6dp"
-            android:background="@drawable/shape_corners_solid_ccffffff"
-            android:gravity="center"
-            android:paddingEnd="5dp"
-            android:paddingStart="5dp"
-            android:text="日服"
-            android:textColor="#2C2F3E"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/txt_label"
-            app:layout_constraintStart_toEndOf="@+id/txt_label"
-            app:layout_constraintTop_toTopOf="@+id/txt_label" />
-
-        <TextView
-            android:id="@+id/txt_describe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginStart="0dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:maxWidth="180dp"
-            android:minWidth="20dp"
-            android:textColor="#FFFFFF"
-            android:textSize="11sp"
-            app:layout_constraintBottom_toBottomOf="@+id/img_logo"
-            app:layout_constraintStart_toStartOf="@+id/txt_label" />
-
-        <ImageView
-            android:id="@+id/img_grade"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="13dp"
-            android:layout_marginTop="0dp"
-            android:minHeight="10dp"
-            android:minWidth="10dp"
-            app:layout_constraintBottom_toBottomOf="@+id/img_logo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/img_logo" />
-
-    </android.support.constraint.ConstraintLayout>
-
-<!--</android.support.v7.widget.CardView>-->
+</android.support.constraint.ConstraintLayout>
