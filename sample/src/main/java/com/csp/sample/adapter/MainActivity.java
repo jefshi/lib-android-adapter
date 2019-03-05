@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         list.add("消除");
         list.add("音乐节奏");
         list.add("育成");
-        adapter.addData(list, false);
+        adapter.addData(list, true);
         adapter.notifyDataSetChanged();
     }
 

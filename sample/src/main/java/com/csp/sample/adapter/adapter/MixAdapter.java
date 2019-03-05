@@ -65,12 +65,12 @@ public class MixAdapter extends MultipleAdapter<TopDto> {
         int viewType = getItemViewType(position);
         IViewFill viewFill = getViewFill(viewType);
         if (viewType == TOP_LAYOUT) {
-            ((TopViewFill) viewFill).onBind(holder, (TopDto) mNewData.get(position), position);
+            ((TopViewFill) viewFill).onBind(holder, (TopDto) mNewData.get(position), null, position);
             return;
         }
 
         if (viewType == TITLE_LAYOUT) {
-            ((TitleViewFill) viewFill).onBind(holder, (String) mNewData.get(position), position);
+            ((TitleViewFill) viewFill).onBind(holder, (String) mNewData.get(position), null, position);
         }
     }
 }

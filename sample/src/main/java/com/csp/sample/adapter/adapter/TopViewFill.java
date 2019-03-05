@@ -20,7 +20,7 @@ class TopViewFill implements MultipleAdapter.IViewFill<TopDto> {
     }
 
     @Override
-    public void onBind(final ViewHolder holder, final TopDto datum, int offset) {
+    public void onBind(ViewHolder holder, TopDto datum, Object extra, int position) {
         int grade;
         switch (datum.getGameGrade()) {
             case "S":

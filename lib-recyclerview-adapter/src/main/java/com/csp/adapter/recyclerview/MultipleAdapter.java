@@ -35,6 +35,11 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
     protected OnItemClickListener mOnItemClickListener;
     protected OnItemLongClickListener mOnItemLongClickListener;
 
+    @Deprecated
+    public List<T> getData() {
+        return mData;
+    }
+
     /**
      * @see AdapterView#setOnItemClickListener(AdapterView.OnItemClickListener)
      */
@@ -159,20 +164,9 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
 
     /**
      * @return 获取布局
-     * @see #getViewFillByPosition(int)
      */
     protected IViewFill getViewFill(int viewType) {
         return mViewFillManager.get(viewType);
-    }
-
-    /**
-     * @return 获取布局
-     * @see #getItemViewType(int)
-     * @see #getViewFill(int)
-     * @see SingleAdapter#onBindViewHolder(ViewHolder, int)
-     */
-    protected IViewFill getViewFillByPosition(int position) {
-        return getViewFill(getItemViewType(position));
     }
 
     @NonNull
@@ -218,11 +212,12 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
         /**
          * ViewHolder 数据绑定
          *
-         * @param holder ViewHolder
-         * @param datum  对应数据
-         * @param offset 数据偏移量
+         * @param holder   ViewHolder
+         * @param datum    对应数据
+         * @param extra    额外数据
+         * @param position 位置
          */
-        void onBind(ViewHolder holder, E datum, int offset);
+        void onBind(ViewHolder holder, E datum, Object extra, int position);
     }
 
     /**

@@ -19,7 +19,7 @@ class TitleViewFill implements MultipleAdapter.IViewFill<String> {
      * 布局和数据绑定
      */
     @Override
-    public void onBind(final ViewHolder holder, String title, final int position) {
+    public void onBind(ViewHolder holder, String title, Object extra, int position) {
         holder.setText(R.id.txt_title, title);
     }
 }
