@@ -1,5 +1,10 @@
-# RecyclerViewAdapter
-Android RecyclerView 通用适配器，支持多布局、单布局
+# lib-android-adapter
+Android 列表适配器，支持 RecyclerView
+
+功能：
+1. 多布局（含多种监听器）
+2. 单布局
+3. 头尾布局（装饰者模式）
 
 ## 依赖
 这个还在摸索中，望大神指教，尽快弄成以下形式：
