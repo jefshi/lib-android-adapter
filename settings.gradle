@@ -1,2 +1,1 @@
-include ':sample', ':lib-recyclerview-adapter'
-
+include ':sample', ':lib-adapter-recyclerview'
