@@ -6,16 +6,9 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
-
-        // testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionCode 2
+        versionName "1.0.1"
     }
-
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
-//    }
 
     buildTypes {
         release {
@@ -23,20 +16,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-//    lintOptions {
-//        abortOnError false
-//    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
-
-    // testImplementation 'junit:junit:4.12'
-    // androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    // androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
 publish {
@@ -45,12 +30,12 @@ publish {
 
     userOrg = 'cjef'
     repoName = 'maven'
-    uploadName = 'RecyclerViewAdapter'
+    uploadName = 'lib-android-adapter'
 
     groupId = 'com.csp'
     artifactId = 'adapter.recyclerview'
-    publishVersion = '1.0.0'
+    publishVersion = '1.0.1'
 
     desc = 'Android RecyclerView 通用适配器，支持多布局、单布局、头尾布局'
-    website = 'https://github.com/jefshi/RecyclerViewAdapter'
+    website = 'https://github.com/jefshi/lib-android-adapter'
 }

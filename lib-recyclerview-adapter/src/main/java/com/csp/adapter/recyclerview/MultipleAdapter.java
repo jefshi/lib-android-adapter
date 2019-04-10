@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.RadioGroup;
 
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -19,10 +20,10 @@ import java.util.List;
 /**
  * RecyclerView.Adapter - 多布局
  * Created by csp on 2018/06/19.
- * Modified by csp on 2018/06/19.
+ * Modified by csp on 2019/04/10.
  *
  * @param <T> 数据对象
- * @version 1.0.0
+ * @version 1.0.1
  * @see SingleAdapter
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
@@ -204,6 +205,23 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
     }
 
     /**
+     * 添加布局，配合 onBindViewHolder() 使用，具体参考见 @see
+     *
+     * @see #addViewFill(int, IViewFill)
+     * @see SingleAdapter#addMultiViewFills()
+     * @see SingleAdapter#onBindViewHolder(ViewHolder, int)
+     */
+    protected abstract void addMultiViewFills();
+
+    /**
+     * 解析 XML，如果 ViewGroup 是 RecyclerView，那么保证 RecyclerView 已经执行过 setAdapter()
+     */
+    @SuppressWarnings("unchecked")
+    public View inflate(@LayoutRes int layoutId, ViewGroup parent) {
+        return mInflater.inflate(layoutId, parent, false);
+    }
+
+    /**
      * ViewHolder 数据填充（规则）
      *
      * @param <E> 数据对象
@@ -259,19 +277,17 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
     }
 
     /**
-     * 添加布局，配合 onBindViewHolder() 使用，具体参考见 @see
-     *
-     * @see #addViewFill(int, IViewFill)
-     * @see SingleAdapter#addMultiViewFills()
-     * @see SingleAdapter#onBindViewHolder(ViewHolder, int)
+     * @see RadioGroup.OnCheckedChangeListener
      */
-    protected abstract void addMultiViewFills();
+    public interface OnCheckedChangeListener {
 
-    /**
-     * 解析 XML，如果 ViewGroup 是 RecyclerView，那么保证 RecyclerView 已经执行过 setAdapter()
-     */
-    @SuppressWarnings("unchecked")
-    public View inflate(@LayoutRes int layoutId, ViewGroup parent) {
-        return mInflater.inflate(layoutId, parent, false);
+        /**
+         * 勾选事件
+         *
+         * @param view       勾选监听的 View
+         * @param viewHolder 勾选监听的 View 所属 Item 的 ViewHolder
+         * @param position   勾选监听的 View 所属 Item 的 position
+         */
+        void onCheckedChanged(View view, ViewHolder viewHolder, int position);
     }
 }
