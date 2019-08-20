@@ -19,10 +19,10 @@ import java.util.List;
 /**
  * RecyclerView.Adapter - 多布局
  * Created by csp on 2018/06/19.
- * Modified by csp on 2019/04/10.
+ * Modified by csp on 2019/08/20.
  *
  * @param <T> 数据对象
- * @version 1.0.1
+ * @version 1.1.0
  * @see SingleAdapter
  */
 @SuppressWarnings({"unused", "WeakerAccess"})

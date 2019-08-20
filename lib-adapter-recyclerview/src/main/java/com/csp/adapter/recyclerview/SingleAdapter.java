@@ -8,9 +8,9 @@ import java.util.Collection;
 /**
  * RecyclerView.Adapter - 单布局
  * Created by csp on 2018/06/19.
- * Modified by csp on 2019/04/10.
+ * Modified by csp on 2019/08/20.
  *
- * @version 1.0.1
+ * @version 1.1.0
  */
 @SuppressWarnings({"unused"})
 public abstract class SingleAdapter<T> extends MultipleAdapter<T> implements MultipleAdapter.IItemView<T> {

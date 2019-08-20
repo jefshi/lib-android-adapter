@@ -26,9 +26,9 @@ import android.widget.TextView;
 /**
  * RecyclerView.ItemViewHolder
  * Created by zhy on 2016/04/09.
- * Modified by csp on 2019/04/10.
+ * Modified by csp on 2019/08/20.
  *
- * @version 1.0.2
+ * @version 1.1.0
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class ItemViewHolder extends RecyclerView.ViewHolder {
