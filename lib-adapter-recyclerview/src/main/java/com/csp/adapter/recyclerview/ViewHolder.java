@@ -1,13 +1,15 @@
 package com.csp.adapter.recyclerview;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.text.util.Linkify;
 import android.util.SparseArray;
@@ -24,9 +26,9 @@ import android.widget.TextView;
 /**
  * RecyclerView.ViewHolder
  * Created by zhy on 2016/04/09.
- * Modified by csp on 2018/06/19.
+ * Modified by csp on 2019/04/10.
  *
- * @version 1.0.1
+ * @version 1.0.2
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class ViewHolder extends RecyclerView.ViewHolder {
@@ -50,7 +52,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
      * 通过viewId获取控件
      */
     @SuppressWarnings("unchecked")
-    public <T extends View> T getView(int viewId) {
+    public <T extends View> T getView(@IdRes int viewId) {
         View view = mViews.get(viewId);
         if (view == null) {
             view = mConvertView.findViewById(viewId);
@@ -99,87 +101,88 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     // 以下为辅助方法
     // ==========
 
-    public ViewHolder setText(int viewId, CharSequence text) {
+    public ViewHolder setText(@IdRes int viewId, CharSequence text) {
         ((TextView) getView(viewId)).setText(text);
         return this;
     }
 
-    public ViewHolder setText(int viewId, int resId) {
+    public ViewHolder setText(@IdRes int viewId, @StringRes int resId) {
         ((TextView) getView(viewId)).setText(resId);
         return this;
     }
 
-    public ViewHolder setImageResource(int viewId, int resId) {
+    public ViewHolder setText(@IdRes int viewId, @StringRes int resId, Object... values) {
+        String text = getContext().getString(resId);
+        text = String.format(text, values);
+        ((TextView) getView(viewId)).setText(text);
+        return this;
+    }
+
+    public ViewHolder setImageResource(@IdRes int viewId, @DrawableRes int resId) {
         ImageView view = getView(viewId);
         view.setImageResource(resId);
         return this;
     }
 
-    public ViewHolder setImageBitmap(int viewId, Bitmap bitmap) {
+    public ViewHolder setImageBitmap(@IdRes int viewId, Bitmap bitmap) {
         ImageView view = getView(viewId);
         view.setImageBitmap(bitmap);
         return this;
     }
 
-    public ViewHolder setImageDrawable(int viewId, Drawable drawable) {
+    public ViewHolder setImageDrawable(@IdRes int viewId, Drawable drawable) {
         ImageView view = getView(viewId);
         view.setImageDrawable(drawable);
         return this;
     }
 
-    public ViewHolder setBackgroundColor(int viewId, int color) {
+    public ViewHolder setBackgroundColor(@IdRes int viewId, @ColorInt int color) {
         View view = getView(viewId);
         view.setBackgroundColor(color);
         return this;
     }
 
-    public ViewHolder setBackgroundRes(int viewId, int backgroundRes) {
+    public ViewHolder setBackgroundResource(@IdRes int viewId, @DrawableRes int backgroundRes) {
         View view = getView(viewId);
         view.setBackgroundResource(backgroundRes);
         return this;
     }
 
-    public ViewHolder setTextColor(int viewId, @ColorRes int colorRes) {
+    public ViewHolder setTextColor(@IdRes int viewId, @ColorRes int colorRes) {
         TextView view = getView(viewId);
         int color = getContext().getResources().getColor(colorRes);
         view.setTextColor(color);
         return this;
     }
 
-    public ViewHolder setTextColorRes(int viewId, int textColorRes) {
+    public ViewHolder setTextColorRes(@IdRes int viewId, @ColorRes int textColorRes) {
         TextView view = getView(viewId);
         Context context = view.getContext();
         view.setTextColor(context.getResources().getColor(textColorRes));
         return this;
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public ViewHolder setAlpha(int viewId, float value) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            getView(viewId).setAlpha(value);
-        } else {
-            // Pre-honeycomb hack to set Alpha value
-            AlphaAnimation alpha = new AlphaAnimation(value, value);
-            alpha.setDuration(0);
-            alpha.setFillAfter(true);
-            getView(viewId).startAnimation(alpha);
-        }
+    public ViewHolder setAlpha(@IdRes int viewId, float value) {
+        AlphaAnimation alpha = new AlphaAnimation(value, value);
+        alpha.setDuration(0);
+        alpha.setFillAfter(true);
+        getView(viewId).startAnimation(alpha);
         return this;
     }
 
-    public ViewHolder setVisibility(int viewId, int visibility) {
+    public ViewHolder setVisibility(@IdRes int viewId, int visibility) {
         getView(viewId).setVisibility(visibility);
         return this;
     }
 
-    public ViewHolder linkify(int viewId) {
+    public ViewHolder linkify(@IdRes int viewId) {
         TextView view = getView(viewId);
         Linkify.addLinks(view, Linkify.ALL);
         return this;
     }
 
-    public ViewHolder setTypeface(Typeface typeface, int... viewIds) {
-        for (int viewId : viewIds) {
+    public ViewHolder setTypeface(Typeface typeface, @IdRes int... viewIds) {
+        for (@IdRes int viewId : viewIds) {
             TextView view = getView(viewId);
             view.setTypeface(typeface);
             view.setPaintFlags(view.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
@@ -187,62 +190,62 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    public ViewHolder setProgress(int viewId, int progress) {
+    public ViewHolder setProgress(@IdRes int viewId, int progress) {
         ProgressBar view = getView(viewId);
         view.setProgress(progress);
         return this;
     }
 
-    public ViewHolder setProgress(int viewId, int progress, int max) {
+    public ViewHolder setProgress(@IdRes int viewId, int progress, int max) {
         ProgressBar view = getView(viewId);
         view.setMax(max);
         view.setProgress(progress);
         return this;
     }
 
-    public ViewHolder setMax(int viewId, int max) {
+    public ViewHolder setMax(@IdRes int viewId, int max) {
         ProgressBar view = getView(viewId);
         view.setMax(max);
         return this;
     }
 
-    public ViewHolder setRating(int viewId, float rating) {
+    public ViewHolder setRating(@IdRes int viewId, float rating) {
         RatingBar view = getView(viewId);
         view.setRating(rating);
         return this;
     }
 
-    public ViewHolder setRating(int viewId, float rating, int max) {
+    public ViewHolder setRating(@IdRes int viewId, float rating, int max) {
         RatingBar view = getView(viewId);
         view.setMax(max);
         view.setRating(rating);
         return this;
     }
 
-    public ViewHolder setTag(int viewId, Object tag) {
+    public ViewHolder setTag(@IdRes int viewId, Object tag) {
         View view = getView(viewId);
         view.setTag(tag);
         return this;
     }
 
-    public ViewHolder setTag(int viewId, int key, Object tag) {
+    public ViewHolder setTag(@IdRes int viewId, int key, Object tag) {
         View view = getView(viewId);
         view.setTag(key, tag);
         return this;
     }
 
-    public ViewHolder setChecked(int viewId, boolean checked) {
+    public ViewHolder setChecked(@IdRes int viewId, boolean checked) {
         Checkable view = getView(viewId);
         view.setChecked(checked);
         return this;
     }
 
-    public ViewHolder setSelected(int viewId, boolean selected) {
+    public ViewHolder setSelected(@IdRes int viewId, boolean selected) {
         getView(viewId).setSelected(selected);
         return this;
     }
 
-    public ViewHolder setEnabled(int viewId, boolean enabled) {
+    public ViewHolder setEnabled(@IdRes int viewId, boolean enabled) {
         getView(viewId).setEnabled(enabled);
         return this;
     }
@@ -250,19 +253,19 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     /**
      * 关于事件的
      */
-    public ViewHolder setOnClickListener(int viewId, View.OnClickListener listener) {
+    public ViewHolder setOnClickListener(@IdRes int viewId, View.OnClickListener listener) {
         View view = getView(viewId);
         view.setOnClickListener(listener);
         return this;
     }
 
-    public ViewHolder setOnTouchListener(int viewId, View.OnTouchListener listener) {
+    public ViewHolder setOnTouchListener(@IdRes int viewId, View.OnTouchListener listener) {
         View view = getView(viewId);
         view.setOnTouchListener(listener);
         return this;
     }
 
-    public ViewHolder setOnLongClickListener(int viewId, View.OnLongClickListener listener) {
+    public ViewHolder setOnLongClickListener(@IdRes int viewId, View.OnLongClickListener listener) {
         View view = getView(viewId);
         view.setOnLongClickListener(listener);
         return this;

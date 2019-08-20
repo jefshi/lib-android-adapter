@@ -22,7 +22,7 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class HeadFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final int VIEW_TYPE_HEAD = 0x40000000;
+    private static final int VIEW_TYPE_HEAD = 0xC0000000;
     private static final int VIEW_TYPE_FOOT = 0x80000000;
 
     private RecyclerView.Adapter mAdapter;
@@ -182,6 +182,7 @@ public class HeadFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     /**
      * 解析 XML，如果 ViewGroup 是 RecyclerView，那么保证 RecyclerView 已经执行过 setAdapter()
      */
+    @SuppressWarnings("WeakerAccess")
     public View inflate(Context context, @LayoutRes int layoutId, ViewGroup parent) {
         return LayoutInflater.from(context).inflate(layoutId, parent, false);
     }
