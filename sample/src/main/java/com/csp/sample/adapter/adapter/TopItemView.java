@@ -6,7 +6,7 @@ import com.csp.sample.adapter.R;
 import com.csp.sample.adapter.dto.TopDto;
 
 
-class TopViewFill implements MultipleAdapter.IItemView<TopDto> {
+class TopItemView implements MultipleAdapter.IItemView<TopDto> {
 
     private final static int[] IMG_GRADE_RES = new int[]{
             R.drawable.ic_grade_s,

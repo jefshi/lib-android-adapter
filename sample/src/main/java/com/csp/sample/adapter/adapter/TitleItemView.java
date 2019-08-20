@@ -5,7 +5,7 @@ import com.csp.adapter.recyclerview.MultipleAdapter;
 import com.csp.sample.adapter.R;
 
 
-class TitleViewFill implements MultipleAdapter.IItemView<String> {
+class TitleItemView implements MultipleAdapter.IItemView<String> {
 
     /**
      * 布局 ID

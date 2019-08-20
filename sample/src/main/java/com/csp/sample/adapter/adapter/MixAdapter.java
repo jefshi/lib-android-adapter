@@ -21,10 +21,10 @@ public class MixAdapter extends MultipleAdapter<TopDto> {
             TopDto datum = mData.get(i);
             if (i % 2 == 0) {
                 mItemData.add(datum.getChineseName());
-                mItemViews.add(new TitleViewFill());
+                mItemViews.add(new TitleItemView());
             }
             mItemData.add(datum);
-            mItemViews.add(new TopViewFill());
+            mItemViews.add(new TopItemView());
         }
     }
 }
