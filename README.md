@@ -17,7 +17,6 @@ dependencies {
 
 ## 外围使用：
 [sample - MainActivity](./sample/src/main/java/com/csp/sample/adapter/MainActivity.java)
-
 ``` java
 RecyclerView rcvSingle = findViewById(R.id.rcv_single);
 TagAdapter tagAdapter = new TagAdapter(this);
@@ -58,55 +57,43 @@ public class TagAdapter extends SingleAdapter<String> {
 
 ## 多布局使用：
 [sample - MixAdapter](./sample/src/main/java/com/csp/sample/adapter/adapter/MixAdapter.java)
-
-[sample - TitleViewFill](./sample/src/main/java/com/csp/sample/adapter/adapter/TitleViewFill.java)
-
 ``` java
 public class MixAdapter extends MultipleAdapter<TopDto> {
-    private final int TOP_LAYOUT = 0;
-    private final int TITLE_LAYOUT = 1;
 
     public MixAdapter(Context context) {
         super(context);
     }
 
     /**
-     * 添加布局（布局数据类型可以不同）
+     * 原始数据变化时，Item 对应的数据和 View 更新，但不主动刷新列表
      */
     @Override
-    protected void addMultiViewFills() {
-        addViewFill(TOP_LAYOUT, new TopViewFill());
-        addViewFill(TITLE_LAYOUT, new TitleViewFill());
-    }
+    public void onDataChanged() {
+        super.onDataChanged();
 
-    @Override
-    public int getItemCount() {
-        return mNewData.size();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return mItemViewType.get(position);
-    }
-
-    /**
-     * 只负责将数据分配给对应的布局
-     */
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        int viewType = getItemViewType(position);
-        IViewFill viewFill = getViewFill(viewType);
-        if (viewType == TOP_LAYOUT) {
-            ((TopViewFill) viewFill).onBind(holder, (TopDto) mNewData.get(position), position);
-            return;
-        }
-
-        if (viewType == TITLE_LAYOUT) {
-            ((TitleViewFill) viewFill).onBind(holder, (String) mNewData.get(position), position);
+        mItemData.clear();  // 数据集合，Adapter 内部数据，与 Item 一一对应
+        mItemViews.clear(); // 布局集合，Adapter 内部数据，与 Item 一一对应
+        for (int i = 0; i < mData.size(); i++) {  // 原始数据集合，外围通过 Adapter 影响，但与 Item 不一一对应
+            TopDto datum = mData.get(i);
+            if (i % 2 == 0) {
+                mItemData.add(datum.getChineseName());
+                mItemViews.add(new TitleItemView()); // 标题布局
+            }
+            mItemData.add(datum);
+            mItemViews.add(new TopItemView()); // 内容布局
         }
     }
 }
 ```
+
+注：MultipleAdapter 数据集分以下三种
+``` java
+protected List<T> mData; // 原始数据集合，外围通过 Adapter 影响，但与 Item 不一一对应
+protected List<Object> mItemData; // 数据集合，Adapter 内部数据，与 Item 一一对应
+protected List<IItemView> mItemViews; // 布局集合，Adapter 内部数据，与 Item 一一对应
+```
+
+[sample - TitleItemView](./sample/src/main/java/com/csp/sample/adapter/adapter/TitleItemView .java)
 ``` java
 class TitleViewFill implements MultipleAdapter.IViewFill<String> {
 
@@ -128,6 +115,44 @@ class TitleViewFill implements MultipleAdapter.IViewFill<String> {
 }
 ```
 
+[sample - TitleItemView](./sample/src/main/java/com/csp/sample/adapter/adapter/TitleItemView .java)
+``` java
+class TopItemView implements MultipleAdapter.IItemView<TopDto> {
+
+    private final static int[] IMG_GRADE_RES = new int[]{
+            R.drawable.ic_grade_s,
+            R.drawable.ic_grade_a,
+            R.drawable.ic_grade_b,
+    };
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.item_top;
+    }
+
+    @Override
+    public void onBind(ItemViewHolder holder, TopDto datum, int position) {
+        int grade;
+        switch (datum.getGameGrade()) {
+            case "S":
+                grade = 0;
+                break;
+            case "A":
+                grade = 1;
+                break;
+            default:
+            case "B":
+                grade = 2;
+                break;
+        }
+        holder.setText(R.id.txt_label, datum.getChineseName())
+                .setText(R.id.txt_booster, datum.getGameService())
+                .setText(R.id.txt_describe, datum.getGameRecommendText())
+                .setImageResource(R.id.img_grade, IMG_GRADE_RES[grade]);
+    }
+}
+```
+
 ## 头尾布局
 装饰者模式，任意 RecyclerView.Adapter 均可，实现原理为多布局
 ``` java
@@ -143,8 +168,31 @@ view = adapter.addFootView(R.layout.item_tag, rcvMultiple);
 ((TextView) view.findViewById(R.id.txt_tag)).setText("尾布局");
 ```
 
+## ISnapHelperExtend
+TODO 补充说明：RecyclerView + SnapHelper 时，实现类似 {@link ViewPager.OnPageChangeListener} 的监听
+``` java
+LinearSnapHelper snapHelper = new LinearSnapHelper();
+snapHelper.attachToRecyclerView(rcvMultiple);
+ISnapHelperExtend.OnScrollListener listener = new ISnapHelperExtend.OnScrollListener(snapHelper);
+listener.setOnPageChangeListener(new ISnapHelperExtend.OnPageChangeListener() {
+    @Override
+    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+    }
+
+    @Override
+    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+    }
+    
+    @Override
+    public void onPageSelected(int position) {
+    }
+});
+rcvMultiple.addOnScrollListener(listener);
+```
+
 ## Sample
 ![sample.gif](./img/sample.gif)
 
 ## 感谢
 - [张鸿洋 - baseAdapter](https://github.com/hongyangAndroid/baseAdapter)：主要参考对象，尤其是 ViewHolder 类
+- [RecyclerView实现类似ViewPager翻页OnPageChangeListener监听功能](https://blog.csdn.net/u012854870/article/details/84984066)

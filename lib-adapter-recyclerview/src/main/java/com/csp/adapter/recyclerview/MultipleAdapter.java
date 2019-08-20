@@ -28,9 +28,9 @@ import java.util.List;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHolder> {
     private LayoutInflater mInflater;
-    protected List<T> mData; // 数据集，但与 Item 不一一对应
-    protected List<Object> mItemData; // 数据集，与 Item 一一对应
-    protected List<IItemView> mItemViews; // 布局集合，与 Item 一一对应
+    protected List<T> mData; // 原始数据集合，外围通过 Adapter 影响，但与 Item 不一一对应
+    protected List<Object> mItemData; // 数据集合，Adapter 内部数据，与 Item 一一对应
+    protected List<IItemView> mItemViews; // 布局集合，Adapter 内部数据，与 Item 一一对应
 
     protected OnItemClickListener mOnItemClickListener;
     protected OnItemLongClickListener mOnItemLongClickListener;
