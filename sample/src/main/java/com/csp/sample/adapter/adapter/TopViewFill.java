@@ -6,7 +6,7 @@ import com.csp.sample.adapter.R;
 import com.csp.sample.adapter.dto.TopDto;
 
 
-class TopViewFill implements MultipleAdapter.IViewFill<TopDto> {
+class TopViewFill implements MultipleAdapter.IItemView<TopDto> {
 
     private final static int[] IMG_GRADE_RES = new int[]{
             R.drawable.ic_grade_s,
@@ -20,7 +20,7 @@ class TopViewFill implements MultipleAdapter.IViewFill<TopDto> {
     }
 
     @Override
-    public void onBind(ViewHolder holder, TopDto datum, Object extra, int position) {
+    public void onBind(ViewHolder holder, TopDto datum, int position) {
         int grade;
         switch (datum.getGameGrade()) {
             case "S":

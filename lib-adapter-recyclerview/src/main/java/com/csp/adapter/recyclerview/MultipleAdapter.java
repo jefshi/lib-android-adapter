@@ -5,7 +5,6 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,13 +27,14 @@ import java.util.List;
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
-    protected LayoutInflater mInflater;
-    protected List<T> mData;
-
-    private SparseArray<IViewFill> mViewFillManager;
+    private LayoutInflater mInflater;
+    protected List<T> mData; // 数据集，但与 Item 不一一对应
+    protected List<Object> mItemData; // 数据集，与 Item 一一对应
+    protected List<IItemView> mItemViews; // 布局集合，与 Item 一一对应
 
     protected OnItemClickListener mOnItemClickListener;
     protected OnItemLongClickListener mOnItemLongClickListener;
+    protected OnDataChangedListener mOnDataChangedListener;
 
     @Deprecated
     public List<T> getData() {
@@ -59,12 +59,16 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
         mOnItemLongClickListener = listener;
     }
 
+    public void setOnDataChangedListener(OnDataChangedListener onDataChangedListener) {
+        mOnDataChangedListener = onDataChangedListener;
+    }
+
     public MultipleAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
         mData = new ArrayList<>();
 
-        mViewFillManager = new SparseArray<>();
-        addMultiViewFills();
+        mItemData = new ArrayList<>();
+        mItemViews = new ArrayList<>();
     }
 
     public MultipleAdapter(Context context, Collection<T> data) {
@@ -151,37 +155,55 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
      * 数据变化时回调
      */
     public void onDataChanged() {
-    }
-
-    /**
-     * 追加布局
-     *
-     * @see SingleAdapter#onBindViewHolder(ViewHolder, int)
-     */
-    protected MultipleAdapter addViewFill(int viewType, IViewFill viewHolder) {
-        mViewFillManager.put(viewType, viewHolder);
-        return this;
+        if (mOnDataChangedListener != null)
+            mOnDataChangedListener.onDataChanged();
     }
 
     /**
      * @return 获取布局
      */
-    protected IViewFill getViewFill(int viewType) {
-        return mViewFillManager.get(viewType);
+    protected IItemView getItemView(int position) {
+        return mItemViews.get(position);
+    }
+
+    /**
+     * @see android.widget.Adapter#getItem(int)
+     */
+    public Object getItem(int position) {
+        return mItemData.get(position);
+    }
+
+    @Override
+    public int getItemCount() {
+        return mItemViews.size();
+    }
+
+    /**
+     * @return 布局ID 作为 ItemViewType
+     */
+    @Override
+    public int getItemViewType(int position) {
+        return mItemViews.get(position).getLayoutId();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        int layoutId = mViewFillManager.get(viewType).getLayoutId();
-        View view = mInflater.inflate(layoutId, parent, false);
+        View view = mInflater.inflate(viewType, parent, false); // ItemViewType 为布局ID
         ViewHolder holder = new ViewHolder(view);
-        onCreateViewHolder(holder);
+        onCreateViewHolder(parent, holder);
         setOnClickListener(parent, holder);
         return holder;
     }
 
-    protected void onCreateViewHolder(ViewHolder holder) {
+    @Override
+    @SuppressWarnings("unchecked")
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        IItemView itemView = getItemView(position);
+        itemView.onBind(holder, getItem(position), position);
+    }
+
+    protected void onCreateViewHolder(@NonNull ViewGroup parent, ViewHolder holder) {
     }
 
     protected void setOnClickListener(final ViewGroup parent, final ViewHolder viewHolder) {
@@ -205,18 +227,8 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
     }
 
     /**
-     * 添加布局，配合 onBindViewHolder() 使用，具体参考见 @see
-     *
-     * @see #addViewFill(int, IViewFill)
-     * @see SingleAdapter#addMultiViewFills()
-     * @see SingleAdapter#onBindViewHolder(ViewHolder, int)
-     */
-    protected abstract void addMultiViewFills();
-
-    /**
      * 解析 XML，如果 ViewGroup 是 RecyclerView，那么保证 RecyclerView 已经执行过 setAdapter()
      */
-    @SuppressWarnings("unchecked")
     public View inflate(@LayoutRes int layoutId, ViewGroup parent) {
         return mInflater.inflate(layoutId, parent, false);
     }
@@ -226,11 +238,12 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
      *
      * @param <E> 数据对象
      */
-    public interface IViewFill<E> {
+    public interface IItemView<E> {
 
         /**
          * @return ViewHolder 对应布局
          */
+        @LayoutRes
         int getLayoutId();
 
         /**
@@ -238,10 +251,17 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
          *
          * @param holder   ViewHolder
          * @param datum    对应数据
-         * @param extra    额外数据
          * @param position 位置
          */
-        void onBind(ViewHolder holder, E datum, Object extra, int position);
+        void onBind(ViewHolder holder, E datum, int position);
+    }
+
+    /**
+     * 数据变化监听器
+     */
+    public interface OnDataChangedListener {
+
+        void onDataChanged();
     }
 
     /**
@@ -285,9 +305,41 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
          * 勾选事件
          *
          * @param view       勾选监听的 View
-         * @param viewHolder 勾选监听的 View 所属 Item 的 ViewHolder
-         * @param position   勾选监听的 View 所属 Item 的 position
+         * @param checked    true：表示事件发生前，View 已勾选
+         * @param viewHolder View 所属 Item 的 ViewHolder
+         * @param position   View 所属 Item 的 position
          */
-        void onCheckedChanged(View view, ViewHolder viewHolder, int position);
+        void onCheckedChanged(View view, boolean checked, ViewHolder viewHolder, int position);
+    }
+
+    /**
+     * 其他事件监听
+     */
+    public interface OnOtherListener {
+
+        /**
+         * 其他事件
+         *
+         * @param view       勾选监听的 View
+         * @param viewHolder View 所属 Item 的 ViewHolder
+         * @param position   View 所属 Item 的 position
+         */
+        void onOther(View view, ViewHolder viewHolder, int position);
+    }
+
+    /**
+     * 自定义事件监听
+     */
+    public interface OnCustomListener<E> {
+
+        /**
+         * 其他事件
+         *
+         * @param view       勾选监听的 View
+         * @param viewHolder View 所属 Item 的 ViewHolder
+         * @param datum      需要传递的数据
+         * @param position   View 所属 Item 的 position
+         */
+        void onOther(View view, ViewHolder viewHolder, E datum, int position);
     }
 }

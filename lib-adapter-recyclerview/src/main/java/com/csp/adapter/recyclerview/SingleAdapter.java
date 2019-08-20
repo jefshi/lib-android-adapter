@@ -1,87 +1,62 @@
 package com.csp.adapter.recyclerview;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import android.support.annotation.LayoutRes;
 
 import java.util.Collection;
 
 /**
  * RecyclerView.Adapter - 单布局
  * Created by csp on 2018/06/19.
- * Modified by csp on 2018/06/19.
+ * Modified by csp on 2019/04/10.
  *
- * @version 1.0.0
+ * @version 1.0.1
  */
-@SuppressWarnings({"unused", "WeakerAccess"})
-public abstract class SingleAdapter<T> extends MultipleAdapter<T> {
-    private static final int DEFAULT_LAYOUT = 0;
+@SuppressWarnings({"unused"})
+public abstract class SingleAdapter<T> extends MultipleAdapter<T> implements MultipleAdapter.IItemView<T> {
 
+    @LayoutRes
     private int mLayoutId;
 
-    public SingleAdapter(Context context, int layoutId) {
+    public SingleAdapter(Context context, @LayoutRes int layoutId) {
         super(context);
 
         mLayoutId = layoutId;
     }
 
-    public SingleAdapter(Context context, int layoutId, Collection<T> data) {
-        super(context);
-
-        mLayoutId = layoutId;
-        addData(data, false);
-    }
-
-    public SingleAdapter(Context context, int layoutId, T[] data) {
+    public SingleAdapter(Context context, @LayoutRes int layoutId, Collection<T> data) {
         super(context);
 
         mLayoutId = layoutId;
         addData(data, false);
     }
 
-    @Override
-    protected void addMultiViewFills() {
-        addViewFill(DEFAULT_LAYOUT, new IViewFill<T>() {
-            @Override
-            public int getLayoutId() {
-                return mLayoutId;
-            }
+    public SingleAdapter(Context context, @LayoutRes int layoutId, T[] data) {
+        super(context);
 
-            @Override
-            public void onBind(ViewHolder holder, T datum, Object extra, int position) {
-                SingleAdapter.this.onBind(holder, datum, position);
-            }
-        });
+        mLayoutId = layoutId;
+        addData(data, false);
     }
 
     @Override
-    public int getItemCount() {
-        return mData.size();
+    public int getLayoutId() {
+        return mLayoutId;
     }
 
     @Override
-    public int getItemViewType(int position) {
-        return DEFAULT_LAYOUT;
+    public void onDataChanged() {
+        mItemData.clear();
+        mItemViews.clear();
+
+        mItemData.addAll(mData);
+        for (int i = 0; i < mItemData.size(); i++) {
+            mItemViews.add(this);
+        }
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        int viewType = getItemViewType(position);
-        IViewFill viewFill = getViewFill(viewType);
-        viewFill.onBind(holder, mData.get(position), null, position);
-    }
-
-    /**
-     * @see android.widget.Adapter#getItem(int)
-     */
     public T getItem(int position) {
-        return mData.get(position);
+        return (T) super.getItem(position);
     }
-
-    /**
-     * {@link IViewFill#onBind(ViewHolder, Object, Object, int)}
-     *
-     * @param position 对应数据在列表中的位置
-     */
-    protected abstract void onBind(ViewHolder holder, T datum, int position);
 }

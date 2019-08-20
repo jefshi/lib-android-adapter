@@ -19,15 +19,16 @@ public class TagAdapter extends SingleAdapter<String> {
      * 布局和数据绑定
      */
     @Override
-    protected void onBind(ViewHolder holder, String datum, final int position) {
+    public void onBind(ViewHolder holder, String datum, final int position) {
         holder.setText(R.id.txt_tag, datum);
 
         holder.getConvertView().setOnClickListener(v -> {
-            mData.remove(datum);
-            notifyDataSetChanged();
-
+            // 因为修改数据了，所以监听器放前头
             if (mOnItemClickListener != null)
                 mOnItemClickListener.onItemClick(null, v, holder, position);
+
+            removeData(datum);
+            notifyDataSetChanged();
         });
     }
 }
