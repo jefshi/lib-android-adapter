@@ -1,7 +1,7 @@
 package com.csp.sample.adapter.adapter;
 
+import com.csp.adapter.recyclerview.ItemViewHolder;
 import com.csp.adapter.recyclerview.MultipleAdapter;
-import com.csp.adapter.recyclerview.ViewHolder;
 import com.csp.sample.adapter.R;
 import com.csp.sample.adapter.dto.TopDto;
 
@@ -20,7 +20,7 @@ class TopViewFill implements MultipleAdapter.IItemView<TopDto> {
     }
 
     @Override
-    public void onBind(ViewHolder holder, TopDto datum, int position) {
+    public void onBind(ItemViewHolder holder, TopDto datum, int position) {
         int grade;
         switch (datum.getGameGrade()) {
             case "S":

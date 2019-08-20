@@ -26,7 +26,7 @@ import java.util.List;
  * @see SingleAdapter
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
-public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
+public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHolder> {
     private LayoutInflater mInflater;
     protected List<T> mData; // 数据集，但与 Item 不一一对应
     protected List<Object> mItemData; // 数据集，与 Item 一一对应
@@ -188,9 +188,9 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(viewType, parent, false); // ItemViewType 为布局ID
-        ViewHolder holder = new ViewHolder(view);
+        ItemViewHolder holder = new ItemViewHolder(view);
         onCreateViewHolder(parent, holder);
         setOnClickListener(parent, holder);
         return holder;
@@ -198,30 +198,30 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
 
     @Override
     @SuppressWarnings("unchecked")
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         IItemView itemView = getItemView(position);
         itemView.onBind(holder, getItem(position), position);
     }
 
-    protected void onCreateViewHolder(@NonNull ViewGroup parent, ViewHolder holder) {
+    protected void onCreateViewHolder(@NonNull ViewGroup parent, ItemViewHolder holder) {
     }
 
-    protected void setOnClickListener(final ViewGroup parent, final ViewHolder viewHolder) {
-        viewHolder.getConvertView().setOnClickListener(new View.OnClickListener() {
+    protected void setOnClickListener(final ViewGroup parent, final ItemViewHolder holder) {
+        holder.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int position = viewHolder.getAdapterPosition();
+                int position = holder.getAdapterPosition();
                 if (mOnItemClickListener != null)
-                    mOnItemClickListener.onItemClick(parent, view, viewHolder, position);
+                    mOnItemClickListener.onItemClick(parent, view, holder, position);
             }
         });
 
-        viewHolder.getConvertView().setOnLongClickListener(new View.OnLongClickListener() {
+        holder.getConvertView().setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                int position = viewHolder.getAdapterPosition();
+                int position = holder.getAdapterPosition();
                 return mOnItemLongClickListener != null
-                        && mOnItemLongClickListener.onItemLongClick(parent, view, viewHolder, position);
+                        && mOnItemLongClickListener.onItemLongClick(parent, view, holder, position);
             }
         });
     }
@@ -234,26 +234,26 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
     }
 
     /**
-     * ViewHolder 数据填充（规则）
+     * ItemViewHolder 数据填充（规则）
      *
      * @param <E> 数据对象
      */
     public interface IItemView<E> {
 
         /**
-         * @return ViewHolder 对应布局
+         * @return ItemViewHolder 对应布局
          */
         @LayoutRes
         int getLayoutId();
 
         /**
-         * ViewHolder 数据绑定
+         * ItemViewHolder 数据绑定
          *
-         * @param holder   ViewHolder
+         * @param holder   ItemViewHolder
          * @param datum    对应数据
          * @param position 位置
          */
-        void onBind(ViewHolder holder, E datum, int position);
+        void onBind(ItemViewHolder holder, E datum, int position);
     }
 
     /**
@@ -274,10 +274,10 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
          *
          * @param parent     即 Item 所在的 RecyclerView 对象
          * @param view       被点击的 View
-         * @param viewHolder 被点击的 View 所属 Item 的 ViewHolder
+         * @param holder 被点击的 View 所属 Item 的 ItemViewHolder
          * @param position   被点击的 View 所属 Item 的 position
          */
-        void onItemClick(ViewGroup parent, View view, ViewHolder viewHolder, int position);
+        void onItemClick(ViewGroup parent, View view, ItemViewHolder holder, int position);
     }
 
     /**
@@ -290,10 +290,10 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
          *
          * @param parent     即 Item 所在的 RecyclerView 对象
          * @param view       被点击的 View
-         * @param viewHolder 被点击的 View 所属 Item 的 ViewHolder
+         * @param holder 被点击的 View 所属 Item 的 ItemViewHolder
          * @param position   被点击的 View 所属 Item 的 position
          */
-        boolean onItemLongClick(ViewGroup parent, View view, ViewHolder viewHolder, int position);
+        boolean onItemLongClick(ViewGroup parent, View view, ItemViewHolder holder, int position);
     }
 
     /**
@@ -306,10 +306,10 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
          *
          * @param view       勾选监听的 View
          * @param checked    true：表示事件发生前，View 已勾选
-         * @param viewHolder View 所属 Item 的 ViewHolder
+         * @param holder View 所属 Item 的 ItemViewHolder
          * @param position   View 所属 Item 的 position
          */
-        void onCheckedChanged(View view, boolean checked, ViewHolder viewHolder, int position);
+        void onCheckedChanged(View view, boolean checked, ItemViewHolder holder, int position);
     }
 
     /**
@@ -321,10 +321,10 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
          * 其他事件
          *
          * @param view       勾选监听的 View
-         * @param viewHolder View 所属 Item 的 ViewHolder
+         * @param holder View 所属 Item 的 ItemViewHolder
          * @param position   View 所属 Item 的 position
          */
-        void onOther(View view, ViewHolder viewHolder, int position);
+        void onOther(View view, ItemViewHolder holder, int position);
     }
 
     /**
@@ -336,10 +336,10 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ViewHolder
          * 其他事件
          *
          * @param view       勾选监听的 View
-         * @param viewHolder View 所属 Item 的 ViewHolder
+         * @param holder View 所属 Item 的 ItemViewHolder
          * @param datum      需要传递的数据
          * @param position   View 所属 Item 的 position
          */
-        void onOther(View view, ViewHolder viewHolder, E datum, int position);
+        void onOther(View view, ItemViewHolder holder, E datum, int position);
     }
 }

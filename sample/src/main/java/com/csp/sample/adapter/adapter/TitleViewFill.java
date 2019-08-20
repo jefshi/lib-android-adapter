@@ -1,7 +1,7 @@
 package com.csp.sample.adapter.adapter;
 
+import com.csp.adapter.recyclerview.ItemViewHolder;
 import com.csp.adapter.recyclerview.MultipleAdapter;
-import com.csp.adapter.recyclerview.ViewHolder;
 import com.csp.sample.adapter.R;
 
 
@@ -19,7 +19,7 @@ class TitleViewFill implements MultipleAdapter.IItemView<String> {
      * 布局和数据绑定
      */
     @Override
-    public void onBind(ViewHolder holder, String title, int position) {
+    public void onBind(ItemViewHolder holder, String title, int position) {
         holder.setText(R.id.txt_title, title);
     }
 }

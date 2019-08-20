@@ -3,7 +3,7 @@ package com.csp.sample.adapter.adapter;
 import android.content.Context;
 
 import com.csp.adapter.recyclerview.SingleAdapter;
-import com.csp.adapter.recyclerview.ViewHolder;
+import com.csp.adapter.recyclerview.ItemViewHolder;
 import com.csp.sample.adapter.R;
 
 public class TagAdapter extends SingleAdapter<String> {
@@ -19,7 +19,7 @@ public class TagAdapter extends SingleAdapter<String> {
      * 布局和数据绑定
      */
     @Override
-    public void onBind(ViewHolder holder, String datum, final int position) {
+    public void onBind(ItemViewHolder holder, String datum, final int position) {
         holder.setText(R.id.txt_tag, datum);
 
         holder.getConvertView().setOnClickListener(v -> {

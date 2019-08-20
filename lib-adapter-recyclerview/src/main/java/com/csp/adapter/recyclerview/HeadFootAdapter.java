@@ -133,7 +133,7 @@ public class HeadFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @NonNull
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (isHeadOrFoot(viewType)) {
-            return new ViewHolder(getViewByViewType(viewType));
+            return new ItemViewHolder(getViewByViewType(viewType));
         } else
             return mAdapter.onCreateViewHolder(parent, viewType);
     }
