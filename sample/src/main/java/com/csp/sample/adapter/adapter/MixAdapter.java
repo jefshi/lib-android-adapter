@@ -12,7 +12,9 @@ public class MixAdapter extends MultipleAdapter<TopDto> {
     }
 
     /**
-     * 原始数据变化时，Item 对应的数据和 View 更新，但不主动刷新列表
+     * 列表的原始数据变化监听：
+     * 1. 用于更新列表每一项所匹配的数据和布局类型
+     * 2. 一般不建议在这直接刷新列表，即调用 notifyDataSetChanged 等
      */
     @Override
     public void onDataChanged() {
