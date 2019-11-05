@@ -15,6 +15,10 @@ dependencies {
 }
 ```
 
+## andoridx
+
+androidx 的使用和源码，请切换到 androidx 分支
+
 ## 外围使用：
 [sample - MainActivity](./sample/src/main/java/com/csp/sample/adapter/MainActivity.java)
 ``` java
