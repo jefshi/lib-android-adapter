@@ -1,18 +1,19 @@
 package com.csp.adapter.recyclerview;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.RadioGroup;
 
-import java.util.Arrays;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -272,10 +273,10 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
         /**
          * Item 的点击事件
          *
-         * @param parent     即 Item 所在的 RecyclerView 对象
-         * @param view       被点击的 View
-         * @param holder 被点击的 View 所属 Item 的 ItemViewHolder
-         * @param position   被点击的 View 所属 Item 的 position
+         * @param parent   即 Item 所在的 RecyclerView 对象
+         * @param view     被点击的 View
+         * @param holder   被点击的 View 所属 Item 的 ItemViewHolder
+         * @param position 被点击的 View 所属 Item 的 position
          */
         void onItemClick(ViewGroup parent, View view, ItemViewHolder holder, int position);
     }
@@ -288,10 +289,10 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
         /**
          * Item 的长按事件
          *
-         * @param parent     即 Item 所在的 RecyclerView 对象
-         * @param view       被点击的 View
-         * @param holder 被点击的 View 所属 Item 的 ItemViewHolder
-         * @param position   被点击的 View 所属 Item 的 position
+         * @param parent   即 Item 所在的 RecyclerView 对象
+         * @param view     被点击的 View
+         * @param holder   被点击的 View 所属 Item 的 ItemViewHolder
+         * @param position 被点击的 View 所属 Item 的 position
          */
         boolean onItemLongClick(ViewGroup parent, View view, ItemViewHolder holder, int position);
     }
@@ -304,10 +305,10 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
         /**
          * 勾选事件
          *
-         * @param view       勾选监听的 View
-         * @param checked    true：表示事件发生前，View 已勾选
-         * @param holder View 所属 Item 的 ItemViewHolder
-         * @param position   View 所属 Item 的 position
+         * @param view     勾选监听的 View
+         * @param checked  true：表示事件发生前，View 已勾选
+         * @param holder   View 所属 Item 的 ItemViewHolder
+         * @param position View 所属 Item 的 position
          */
         void onCheckedChanged(View view, boolean checked, ItemViewHolder holder, int position);
     }
@@ -320,9 +321,9 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
         /**
          * 其他事件
          *
-         * @param view       勾选监听的 View
-         * @param holder View 所属 Item 的 ItemViewHolder
-         * @param position   View 所属 Item 的 position
+         * @param view     勾选监听的 View
+         * @param holder   View 所属 Item 的 ItemViewHolder
+         * @param position View 所属 Item 的 position
          */
         void onOther(View view, ItemViewHolder holder, int position);
     }
@@ -335,10 +336,10 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
         /**
          * 其他事件
          *
-         * @param view       勾选监听的 View
-         * @param holder View 所属 Item 的 ItemViewHolder
-         * @param datum      需要传递的数据
-         * @param position   View 所属 Item 的 position
+         * @param view     勾选监听的 View
+         * @param holder   View 所属 Item 的 ItemViewHolder
+         * @param datum    需要传递的数据
+         * @param position View 所属 Item 的 position
          */
         void onOther(View view, ItemViewHolder holder, E datum, int position);
     }

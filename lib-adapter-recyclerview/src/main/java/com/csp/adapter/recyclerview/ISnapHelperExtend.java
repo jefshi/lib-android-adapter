@@ -1,10 +1,11 @@
 package com.csp.adapter.recyclerview;
 
-import android.support.annotation.NonNull;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * RecyclerView + SnapHelper 时，实现类似 {@link ViewPager.OnPageChangeListener} 的监听

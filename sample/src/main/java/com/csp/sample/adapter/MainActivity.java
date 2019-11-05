@@ -1,12 +1,13 @@
 package com.csp.sample.adapter;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.csp.adapter.recyclerview.HeadFootAdapter;
 import com.csp.sample.adapter.adapter.MixAdapter;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 多布局 + 头尾布局
         HeadFootAdapter adapter = new HeadFootAdapter(mixAdapter);
-        rcvMultiple.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        rcvMultiple.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         rcvMultiple.setAdapter(adapter);
 
         View view = adapter.addHeaderView(R.layout.item_tag, rcvMultiple);
