@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.novoda.bintray-release' // 添加内容
 
 android {
     compileSdkVersion 28
@@ -16,6 +16,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+//    // 有人建议追加，但测试后表示无所谓
+//    lintOptions {
+//        abortOnError false
+//    }
 }
 
 dependencies {
@@ -23,18 +28,22 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:28.0.0'
 }
 
+// 添加内容
+// 配置说明：https://blog.csdn.net/droyon/article/details/77751033
+// 使用命令行执行，而不是直接执行 Gradle 任务
+// 命令行：gradlew clean generatePomFileForReleasePublication build bintrayUpload -PbintrayUser=*** -PbintrayKey=*** -PdryRun=false
 publish {
-    // 配置说明：https://blog.csdn.net/droyon/article/details/77751033
-    bintrayUser = '${BINTRAY_USER}'
-    bintrayKey = '${BINTRAY_API_KEY}'
+    // bintrayUser = '' // 不要使用，因为直接执行 Gradle 任务有问题，须使用命令行
+    // bintrayKey = '' // 不要使用，同上
     autoPublish = true
 
-    userOrg = '${BINTRAY_USER_ORG}'
-    repoName = 'maven'
-    uploadName = 'lib-android-adapter'
+    userOrg = 'jefshi' // 如果上传到组织则用组织名称，如果上传到个人则用 bintray 账户名称
+    repoName = 'maven' // 如果 bintray 上没有此仓库，请先创建，否则无法上传
+    uploadName = 'lib-adapter-recyclerview' // 同样如果 bintray 上没有此包，请先创建，否则无法上传
 
+    // 引用结果：implementation 'groupId:artifactId:publishVersion'
     groupId = 'com.csp'
-    artifactId = 'adapter.recyclerview'
+    artifactId = 'adapter-recyclerview'
     publishVersion = '1.1.0'
     licences = 'Apache-2.0' // 标识符参考：https://spdx.org/licenses/
 
