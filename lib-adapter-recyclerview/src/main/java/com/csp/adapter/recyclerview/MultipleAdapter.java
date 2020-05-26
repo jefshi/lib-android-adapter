@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.RadioGroup;
 
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -71,7 +71,7 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
         mItemViews = new ArrayList<>();
     }
 
-    public MultipleAdapter(Context context, Collection<T> data) {
+    public MultipleAdapter(Context context, Collection<? extends T> data) {
         this(context);
 
         addData(data, false);
@@ -80,22 +80,22 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
     /**
      * @see #addData(int, Collection, boolean)
      */
-    public void addData(Collection<T> data, boolean append) {
+    public void addData(Collection<? extends T> data, boolean append) {
         addData(-1, data, append);
     }
 
     /**
      * @see #addData(int, Collection, boolean)
      */
-    public void addData(T[] data, boolean append) {
-        List<T> dataList = Arrays.asList(data);
+    public <U extends T> void addData(U[] data, boolean append) {
+        List<U> dataList = Arrays.asList(data);
         addData(-1, dataList, append);
     }
 
     /**
      * @see #addData(int, Collection, boolean)
      */
-    public void addData(T datum, boolean append) {
+    public <U extends T> void addData(U datum, boolean append) {
         addData(-1, datum, append);
     }
 
@@ -106,7 +106,7 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
      * @param data     数据
      * @param append   是否追加到列表末尾。false: 重置数据
      */
-    public void addData(int position, Collection<T> data, boolean append) {
+    public void addData(int position, Collection<? extends T> data, boolean append) {
         if (!append)
             mData.clear();
 
@@ -122,7 +122,7 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
     /**
      * @see #addData(int, Collection, boolean)
      */
-    public void addData(int position, T datum, boolean append) {
+    public <U extends T> void addData(int position, U datum, boolean append) {
         if (!append)
             mData.clear();
 
@@ -138,7 +138,7 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
     /**
      * @see Collection#remove(Object)
      */
-    public void removeData(T datum) {
+    public <U extends T> void removeData(U datum) {
         mData.remove(datum);
         onDataChanged();
     }
@@ -272,10 +272,10 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
         /**
          * Item 的点击事件
          *
-         * @param parent     即 Item 所在的 RecyclerView 对象
-         * @param view       被点击的 View
-         * @param holder 被点击的 View 所属 Item 的 ItemViewHolder
-         * @param position   被点击的 View 所属 Item 的 position
+         * @param parent   即 Item 所在的 RecyclerView 对象
+         * @param view     被点击的 View
+         * @param holder   被点击的 View 所属 Item 的 ItemViewHolder
+         * @param position 被点击的 View 所属 Item 的 position
          */
         void onItemClick(ViewGroup parent, View view, ItemViewHolder holder, int position);
     }
@@ -288,10 +288,10 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
         /**
          * Item 的长按事件
          *
-         * @param parent     即 Item 所在的 RecyclerView 对象
-         * @param view       被点击的 View
-         * @param holder 被点击的 View 所属 Item 的 ItemViewHolder
-         * @param position   被点击的 View 所属 Item 的 position
+         * @param parent   即 Item 所在的 RecyclerView 对象
+         * @param view     被点击的 View
+         * @param holder   被点击的 View 所属 Item 的 ItemViewHolder
+         * @param position 被点击的 View 所属 Item 的 position
          */
         boolean onItemLongClick(ViewGroup parent, View view, ItemViewHolder holder, int position);
     }
@@ -304,10 +304,10 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
         /**
          * 勾选事件
          *
-         * @param view       勾选监听的 View
-         * @param checked    true：表示事件发生前，View 已勾选
-         * @param holder View 所属 Item 的 ItemViewHolder
-         * @param position   View 所属 Item 的 position
+         * @param view     勾选监听的 View
+         * @param checked  true：表示事件发生前，View 已勾选
+         * @param holder   View 所属 Item 的 ItemViewHolder
+         * @param position View 所属 Item 的 position
          */
         void onCheckedChanged(View view, boolean checked, ItemViewHolder holder, int position);
     }
@@ -320,9 +320,9 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
         /**
          * 其他事件
          *
-         * @param view       勾选监听的 View
-         * @param holder View 所属 Item 的 ItemViewHolder
-         * @param position   View 所属 Item 的 position
+         * @param view     勾选监听的 View
+         * @param holder   View 所属 Item 的 ItemViewHolder
+         * @param position View 所属 Item 的 position
          */
         void onOther(View view, ItemViewHolder holder, int position);
     }
@@ -335,10 +335,10 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
         /**
          * 其他事件
          *
-         * @param view       勾选监听的 View
-         * @param holder View 所属 Item 的 ItemViewHolder
-         * @param datum      需要传递的数据
-         * @param position   View 所属 Item 的 position
+         * @param view     勾选监听的 View
+         * @param holder   View 所属 Item 的 ItemViewHolder
+         * @param datum    需要传递的数据
+         * @param position View 所属 Item 的 position
          */
         void onOther(View view, ItemViewHolder holder, E datum, int position);
     }
