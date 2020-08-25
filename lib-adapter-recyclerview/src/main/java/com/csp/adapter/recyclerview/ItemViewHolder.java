@@ -31,7 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
  *
  * @version 1.1.0
  */
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess"})
 public class ItemViewHolder extends RecyclerView.ViewHolder {
     private SparseArray<View> mViews;
     private View mConvertView;

@@ -72,7 +72,7 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
         mItemViews = new ArrayList<>();
     }
 
-    public MultipleAdapter(Context context, Collection<T> data) {
+    public MultipleAdapter(Context context, Collection<? extends T> data) {
         this(context);
 
         addData(data, false);
@@ -81,22 +81,22 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
     /**
      * @see #addData(int, Collection, boolean)
      */
-    public void addData(Collection<T> data, boolean append) {
+    public void addData(Collection<? extends T> data, boolean append) {
         addData(-1, data, append);
     }
 
     /**
      * @see #addData(int, Collection, boolean)
      */
-    public void addData(T[] data, boolean append) {
-        List<T> dataList = Arrays.asList(data);
+    public <U extends T> void addData(U[] data, boolean append) {
+        List<U> dataList = Arrays.asList(data);
         addData(-1, dataList, append);
     }
 
     /**
      * @see #addData(int, Collection, boolean)
      */
-    public void addData(T datum, boolean append) {
+    public <U extends T> void addData(U datum, boolean append) {
         addData(-1, datum, append);
     }
 
@@ -107,7 +107,7 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
      * @param data     数据
      * @param append   是否追加到列表末尾。false: 重置数据
      */
-    public void addData(int position, Collection<T> data, boolean append) {
+    public void addData(int position, Collection<? extends T> data, boolean append) {
         if (!append)
             mData.clear();
 
@@ -123,7 +123,7 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
     /**
      * @see #addData(int, Collection, boolean)
      */
-    public void addData(int position, T datum, boolean append) {
+    public <U extends T> void addData(int position, U datum, boolean append) {
         if (!append)
             mData.clear();
 
@@ -139,7 +139,7 @@ public abstract class MultipleAdapter<T> extends RecyclerView.Adapter<ItemViewHo
     /**
      * @see Collection#remove(Object)
      */
-    public void removeData(T datum) {
+    public <U extends T> void removeData(U datum) {
         mData.remove(datum);
         onDataChanged();
     }

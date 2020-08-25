@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 28
@@ -21,20 +20,4 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
-}
-
-publish {
-    bintrayUser = '${BINTRAY_USER}'
-    bintrayKey = '${BINTRAY_API_KEY}'
-
-    userOrg = 'cjef'
-    repoName = 'maven'
-    uploadName = 'lib-android-adapter'
-
-    groupId = 'com.csp'
-    artifactId = 'adapter.recyclerview'
-    publishVersion = '1.0.1'
-
-    desc = 'Android RecyclerView 通用适配器，支持多布局、单布局、头尾布局'
-    website = 'https://github.com/jefshi/lib-android-adapter'
 }
