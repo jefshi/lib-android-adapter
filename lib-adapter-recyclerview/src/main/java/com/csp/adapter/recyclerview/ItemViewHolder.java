@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.TextWatcher;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,8 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -43,15 +46,25 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     private final static String TAG = "ItemViewHolder";
 
     private View mConvertView;
+    protected ViewDataBinding mBinding;
+
     protected SparseArray<View> mViews = new SparseArray<>();
     protected volatile SparseArray<Object> keyTagMap;
 
     /**
      * @see #getConvertView()
+     * @see #getBinding()
      */
     public ItemViewHolder(@NonNull View itemView) {
         super(itemView);
         mConvertView = itemView;
+        try {
+            mBinding = DataBindingUtil.bind(itemView);
+        } catch (Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG + "(View)", "View is not a binding layout");
+            }
+        }
     }
 
     public static ItemViewHolder createViewHolder(@NonNull Context context, @Nullable ViewGroup parent, @LayoutRes int layoutId) {
@@ -79,6 +92,20 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
 
     public View getConvertView() {
         return mConvertView;
+    }
+
+    /**
+     * 如果布局没有使用 ViewBinding、DataBinding 方式的话，该值为 null
+     * <p>
+     * 注：如果布局没有使用 binding 方式，则代码强制转换成某个 Binding，必导致编译错误，故无需担心运行时错误
+     *
+     * @see #ItemViewHolder(View)
+     * @see #getConvertView()
+     */
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public <T extends ViewDataBinding> T getBinding() {
+        return (T) mBinding;
     }
 
     public Context getContext() {
