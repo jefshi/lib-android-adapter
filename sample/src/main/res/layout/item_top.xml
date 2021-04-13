@@ -10,7 +10,9 @@
         android:layout_height="200dp"
         android:background="@drawable/ic_backgroud"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_blind" />
+        android:src="@drawable/ic_blind"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/img_logo"
