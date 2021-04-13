@@ -3,6 +3,7 @@ package com.csp.adapter.recyclerview;
 import android.content.Context;
 
 import androidx.annotation.LayoutRes;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collection;
 
