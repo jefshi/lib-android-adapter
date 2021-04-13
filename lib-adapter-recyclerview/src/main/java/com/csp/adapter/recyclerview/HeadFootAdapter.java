@@ -18,6 +18,7 @@ import java.util.List;
  * Created by csp on 2018/08/30.
  * Modified by csp on 2019/08/20.
  *
+ * @author csp
  * @version 1.1.0
  */
 @SuppressWarnings("unused")
@@ -50,10 +51,11 @@ public class HeadFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private View getViewByViewType(int viewType) {
-        if (isHeadView(viewType))
+        if (isHeadView(viewType)) {
             return mHeadViews.get(viewType & ~VIEW_TYPE_HEAD);
-        else
+        } else {
             return mFootViews.get(viewType & ~VIEW_TYPE_FOOT);
+        }
     }
 
     private View addView(@LayoutRes int layoutId, @NonNull ViewGroup parent, boolean isHead) {
@@ -63,10 +65,11 @@ public class HeadFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private void addView(View view, boolean isHead) {
-        if (isHead)
+        if (isHead) {
             mHeadViews.add(view);
-        else
+        } else {
             mFootViews.add(view);
+        }
     }
 
     public View addHeaderView(@LayoutRes int layoutId, @NonNull ViewGroup parent) {
@@ -86,8 +89,9 @@ public class HeadFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private void removeView(View view) {
-        if (!mHeadViews.remove(view))
+        if (!mHeadViews.remove(view)) {
             mFootViews.remove(view);
+        }
     }
 
     public void clearView() {
@@ -121,12 +125,13 @@ public class HeadFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         int indexOfAdapter = position - mHeadViews.size();
         int indexOfFoot = indexOfAdapter - mAdapter.getItemCount();
 
-        if (indexOfAdapter < 0)
+        if (indexOfAdapter < 0) {
             return VIEW_TYPE_HEAD + position;
-        else if (indexOfFoot < 0)
+        } else if (indexOfFoot < 0) {
             return mAdapter.getItemViewType(indexOfAdapter);
-        else
+        } else {
             return VIEW_TYPE_FOOT + indexOfFoot;
+        }
     }
 
     @Override
@@ -134,15 +139,17 @@ public class HeadFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (isHeadOrFoot(viewType)) {
             return new ItemViewHolder(getViewByViewType(viewType));
-        } else
+        } else {
             return mAdapter.onCreateViewHolder(parent, viewType);
+        }
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (!isHeadOrFoot(holder.getItemViewType()))
+        if (!isHeadOrFoot(holder.getItemViewType())) {
             mAdapter.onBindViewHolder(holder, position - mHeadViews.size());
+        }
     }
 
     @Override

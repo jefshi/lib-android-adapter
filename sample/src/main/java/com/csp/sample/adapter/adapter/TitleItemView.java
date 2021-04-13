@@ -4,7 +4,11 @@ import com.csp.adapter.recyclerview.ItemViewHolder;
 import com.csp.adapter.recyclerview.MultipleAdapter;
 import com.csp.sample.adapter.R;
 
-
+/**
+ * 标题布局
+ *
+ * @author csp
+ */
 class TitleItemView implements MultipleAdapter.IItemView<String> {
 
     /**

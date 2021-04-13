@@ -5,6 +5,11 @@ import android.content.Context;
 import com.csp.adapter.recyclerview.MultipleAdapter;
 import com.csp.sample.adapter.dto.TopDto;
 
+/**
+ * 多布局举例
+ *
+ * @author csp
+ */
 public class MixAdapter extends MultipleAdapter<TopDto> {
 
     public MixAdapter(Context context) {
@@ -22,14 +27,18 @@ public class MixAdapter extends MultipleAdapter<TopDto> {
 
         mItemData.clear();  // 数据集合，Adapter 内部数据，与 Item 一一对应
         mItemViews.clear(); // 布局集合，Adapter 内部数据，与 Item 一一对应
-        for (int i = 0; i < mData.size(); i++) {  // 原始数据集合，外围通过 Adapter 影响，但与 Item 不一一对应
+
+        // 原始数据集合，外围通过 Adapter 影响，但与 Item 不一一对应
+        for (int i = 0; i < mData.size(); i++) {
             TopDto datum = mData.get(i);
             if (i % 2 == 0) {
+                // 标题布局
                 mItemData.add(datum.getChineseName());
-                mItemViews.add(new TitleItemView()); // 标题布局
+                mItemViews.add(new TitleItemView());
             }
+            // 内容布局
             mItemData.add(datum);
-            mItemViews.add(new TopItemView()); // 内容布局
+            mItemViews.add(new TopItemView());
         }
     }
 }
