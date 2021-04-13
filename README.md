@@ -194,6 +194,10 @@ listener.setOnPageChangeListener(new ISnapHelperExtend.OnPageChangeListener() {
 rcvMultiple.addOnScrollListener(listener);
 ```
 
+## 其他说明
+
+- 已兼容 notifyItemRemoved() 系列 API
+
 ## Sample
 ![sample.gif](./img/sample.gif)
 
