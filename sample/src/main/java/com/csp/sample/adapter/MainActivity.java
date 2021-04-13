@@ -17,6 +17,11 @@ import com.csp.sample.adapter.dto.TopDto;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 主页
+ *
+ * @author csp
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -29,10 +34,10 @@ public class MainActivity extends AppCompatActivity {
 
         // 单布局
         TagAdapter tagAdapter = new TagAdapter(this);
-        rcvSingle.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        rcvSingle.setLayoutManager(new GridLayoutManager(this, 4));
         rcvSingle.setAdapter(tagAdapter);
 
-        tagAdapter.setOnItemClickListener((parent, view, holder, position) -> {
+        tagAdapter.setOnItemClickListener((position) -> {
             String item = tagAdapter.getItem(position);
             Toast.makeText(this, "删除该标签：" + item, Toast.LENGTH_SHORT).show();
         });
@@ -49,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 多布局 + 头尾布局
         HeadFootAdapter adapter = new HeadFootAdapter(mixAdapter);
-        rcvMultiple.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        rcvMultiple.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rcvMultiple.setAdapter(adapter);
 
         View view = adapter.addHeaderView(R.layout.item_tag, rcvMultiple);
@@ -128,6 +133,6 @@ public class MainActivity extends AppCompatActivity {
         top.setGameGrade("B");
         top.setGameService("日服");
         list.add(top);
-        return  list;
+        return list;
     }
 }

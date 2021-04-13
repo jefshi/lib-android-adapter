@@ -6,6 +6,11 @@ import com.csp.sample.adapter.R;
 import com.csp.sample.adapter.dto.TopDto;
 
 
+/**
+ * 内容布局
+ *
+ * @author csp
+ */
 class TopItemView implements MultipleAdapter.IItemView<TopDto> {
 
     private final static int[] IMG_GRADE_RES = new int[]{
