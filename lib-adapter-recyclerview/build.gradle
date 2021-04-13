@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven'
 
 android {
     compileSdkVersion 28
@@ -20,4 +21,64 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:recyclerview-v7:28.0.0'
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'Example Application'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'A application used as an example on how to set up
+                pushing its components to the Central Repository . '
+                url 'http://www.example.com/example-application'
+
+                scm {
+                    connection 'scm:git:git@github.com:username/project.git'
+                    developerConnection 'scm:git:git@github.com:username/project.git'
+                    url 'https://github.com/username/project'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'manfred'
+                        name 'Manfred Moser'
+                        email 'manfred@sonatype.com'
+                    }
+                }
+            }
+        }
+    }
 }
