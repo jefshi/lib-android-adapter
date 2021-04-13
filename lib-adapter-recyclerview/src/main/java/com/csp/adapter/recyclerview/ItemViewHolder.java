@@ -9,8 +9,12 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextWatcher;
 import android.text.util.Linkify;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -18,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.Checkable;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -28,24 +33,34 @@ import android.widget.TextView;
  * Created by zhy on 2016/04/09.
  * Modified by csp on 2019/08/20.
  *
+ * @author csp
  * @version 1.1.0
  */
-@SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess"})
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class ItemViewHolder extends RecyclerView.ViewHolder {
-    private SparseArray<View> mViews;
-    private View mConvertView;
-    private volatile SparseArray<Object> keyTagMap;
 
-    public ItemViewHolder(View itemView) {
+    private final static String TAG = "ItemViewHolder";
+
+    private View mConvertView;
+    protected SparseArray<View> mViews = new SparseArray<>();
+    protected volatile SparseArray<Object> keyTagMap;
+
+    /**
+     * @see #getConvertView()
+     */
+    public ItemViewHolder(@NonNull View itemView) {
         super(itemView);
         mConvertView = itemView;
-        mViews = new SparseArray<>();
     }
 
-    public static ItemViewHolder createViewHolder(Context context, ViewGroup parent, int layoutId) {
+    public static ItemViewHolder createViewHolder(@NonNull Context context, @Nullable ViewGroup parent, @LayoutRes int layoutId) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View itemView = inflater.inflate(layoutId, parent, false);
-        return new ItemViewHolder(itemView);
+        return createViewHolder(inflater, parent, layoutId);
+    }
+
+    public static ItemViewHolder createViewHolder(@NonNull LayoutInflater inflater, @Nullable ViewGroup parent, @LayoutRes int layoutId) {
+        View view = inflater.inflate(layoutId, parent, false);
+        return new ItemViewHolder(view);
     }
 
     /**
@@ -55,7 +70,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     public <T extends View> T getView(@IdRes int viewId) {
         View view = mViews.get(viewId);
         if (view == null) {
-            view = mConvertView.findViewById(viewId);
+            view = getConvertView().findViewById(viewId);
             mViews.put(viewId, view);
         }
         return (T) view;
@@ -66,7 +81,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     public Context getContext() {
-        return mConvertView.getContext();
+        return getConvertView().getContext();
     }
 
     @SuppressWarnings("unchecked")
@@ -78,8 +93,9 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     public synchronized ItemViewHolder addTag(int key, Object value) {
         if (keyTagMap == null) {
             synchronized (this) {
-                if (keyTagMap == null)
+                if (keyTagMap == null) {
                     keyTagMap = new SparseArray<>();
+                }
             }
         }
 
@@ -88,13 +104,15 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     public synchronized void removeTag(int key) {
-        if (keyTagMap != null)
+        if (keyTagMap != null) {
             keyTagMap.remove(key);
+        }
     }
 
     public synchronized void removeAllTag() {
-        if (keyTagMap != null)
+        if (keyTagMap != null) {
             keyTagMap.clear();
+        }
     }
 
     // ==========
@@ -112,9 +130,37 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     public ItemViewHolder setText(@IdRes int viewId, @StringRes int resId, Object... values) {
+        if (values != null) {
+            for (int i = 0; i < values.length; i++) {
+                if (values[i] == null) {
+                    values[i] = "";
+                }
+            }
+        }
+
         String text = getContext().getString(resId);
         text = String.format(text, values);
         ((TextView) getView(viewId)).setText(text);
+        return this;
+    }
+
+    public ItemViewHolder setHint(@IdRes int viewId, @StringRes int resId) {
+        ((TextView) getView(viewId)).setHint(resId);
+        return this;
+    }
+
+    public ItemViewHolder setInputType(@IdRes int viewId, int type) {
+        ((TextView) getView(viewId)).setInputType(type);
+        return this;
+    }
+
+    public ItemViewHolder addTextChangedListener(@IdRes int viewId, TextWatcher watcher) {
+        ((TextView) getView(viewId)).addTextChangedListener(watcher);
+        return this;
+    }
+
+    public ItemViewHolder removeTextChangedListener(@IdRes int viewId, TextWatcher watcher) {
+        ((TextView) getView(viewId)).removeTextChangedListener(watcher);
         return this;
     }
 
@@ -136,6 +182,11 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public ItemViewHolder setBackground(@IdRes int viewId, Drawable drawable) {
+        getView(viewId).setBackground(drawable);
+        return this;
+    }
+
     public ItemViewHolder setBackgroundColor(@IdRes int viewId, @ColorInt int color) {
         View view = getView(viewId);
         view.setBackgroundColor(color);
@@ -148,17 +199,22 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    public ItemViewHolder setTextColor(@IdRes int viewId, @ColorRes int colorRes) {
-        TextView view = getView(viewId);
-        int color = getContext().getResources().getColor(colorRes);
-        view.setTextColor(color);
+    public ItemViewHolder setTextColor(@IdRes int viewId, @ColorInt int color) {
+        ((TextView) getView(viewId)).setTextColor(color);
         return this;
     }
 
-    public ItemViewHolder setTextColorRes(@IdRes int viewId, @ColorRes int textColorRes) {
-        TextView view = getView(viewId);
-        Context context = view.getContext();
-        view.setTextColor(context.getResources().getColor(textColorRes));
+    public ItemViewHolder setTextColorRes(@IdRes int viewId, @ColorRes int colorRes) {
+        int color = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M
+                ? getContext().getColor(colorRes)
+                : getContext().getResources().getColor(colorRes);
+
+        setTextColor(viewId, color);
+        return this;
+    }
+
+    public ItemViewHolder setTextSize(@IdRes int viewId, float size) {
+        ((TextView) getView(viewId)).setTextSize(size);
         return this;
     }
 
@@ -172,6 +228,11 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
 
     public ItemViewHolder setVisibility(@IdRes int viewId, int visibility) {
         getView(viewId).setVisibility(visibility);
+        return this;
+    }
+
+    public ItemViewHolder setVisibility(@IdRes int viewId, boolean showed) {
+        getView(viewId).setVisibility(showed ? View.VISIBLE : View.GONE);
         return this;
     }
 
@@ -250,6 +311,16 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public ItemViewHolder setActivated(@IdRes int viewId, boolean enabled) {
+        getView(viewId).setActivated(enabled);
+        return this;
+    }
+
+    public ItemViewHolder setFocusableInTouchMode(@IdRes int viewId, boolean enabled) {
+        getView(viewId).setFocusableInTouchMode(enabled);
+        return this;
+    }
+
     /**
      * 关于事件的
      */
@@ -259,15 +330,21 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    public ItemViewHolder setOnTouchListener(@IdRes int viewId, View.OnTouchListener listener) {
-        View view = getView(viewId);
-        view.setOnTouchListener(listener);
-        return this;
-    }
-
     public ItemViewHolder setOnLongClickListener(@IdRes int viewId, View.OnLongClickListener listener) {
         View view = getView(viewId);
         view.setOnLongClickListener(listener);
+        return this;
+    }
+
+    public ItemViewHolder setOnCheckedChangeListener(@IdRes int viewId, CompoundButton.OnCheckedChangeListener listener) {
+        CompoundButton compound = getView(viewId);
+        compound.setOnCheckedChangeListener(listener);
+        return this;
+    }
+
+    public ItemViewHolder setOnTouchListener(@IdRes int viewId, View.OnTouchListener listener) {
+        View view = getView(viewId);
+        view.setOnTouchListener(listener);
         return this;
     }
 }
