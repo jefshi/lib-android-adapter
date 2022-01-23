@@ -27,6 +27,8 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -44,6 +46,8 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
 
     protected final SparseArray<View> mViews = new SparseArray<>();
     protected volatile SparseArray<Object> keyTagMap;
+
+    protected ViewDataBinding mBinding;
 
     /**
      * @see #getConvertView()
@@ -77,6 +81,18 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
 
     public View getConvertView() {
         return itemView;
+    }
+
+    /**
+     * 获取布局对应 ViewDataBinding 对象，注意如果不能生成则可能会抛异常
+     */
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public <T extends ViewDataBinding> T getBinding() {
+        if (mBinding == null) {
+            mBinding = DataBindingUtil.bind(itemView);
+        }
+        return (T) mBinding;
     }
 
     public Context getContext() {
