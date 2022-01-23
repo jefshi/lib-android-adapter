@@ -1,3 +1,6 @@
+/**
+ * @version 1.0.0
+ */
 apply plugin: 'com.android.application'
 
 // [Gradle 编译配置]相关的提交内容见博客【Android Gradle 常用配置】
@@ -56,7 +59,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 
     // 单元测试
-    // testImplementation dep.junit
-    // androidTestImplementation dep.junit_ext
-    // androidTestImplementation dep.espresso_core
+    testImplementation dep.junit
+    androidTestImplementation dep.junit_ext
+    androidTestImplementation dep.espresso_core
 }

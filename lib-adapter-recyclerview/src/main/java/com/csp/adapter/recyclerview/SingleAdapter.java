@@ -1,10 +1,11 @@
 package com.csp.adapter.recyclerview;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
-import android.support.v7.widget.RecyclerView;
 
 import java.util.Collection;
+
+import androidx.annotation.LayoutRes;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * RecyclerView.Adapter - 单布局
