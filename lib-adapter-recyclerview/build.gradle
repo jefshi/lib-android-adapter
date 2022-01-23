@@ -2,8 +2,8 @@ apply from: "${rootDir.path}/gradle/build-lib.gradle"
 
 android {
     defaultConfig {
-        versionCode 3
-        versionName "1.1.0"
+        versionCode 4
+        versionName "1.2.0"
     }
 }
 

@@ -41,8 +41,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
 
     private final static String TAG = "ItemViewHolder";
 
-    private View mConvertView;
-    protected SparseArray<View> mViews = new SparseArray<>();
+    protected final SparseArray<View> mViews = new SparseArray<>();
     protected volatile SparseArray<Object> keyTagMap;
 
     /**
@@ -50,7 +49,6 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
      */
     public ItemViewHolder(@NonNull View itemView) {
         super(itemView);
-        mConvertView = itemView;
     }
 
     public static ItemViewHolder createViewHolder(@NonNull Context context, @Nullable ViewGroup parent, @LayoutRes int layoutId) {
@@ -77,7 +75,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     public View getConvertView() {
-        return mConvertView;
+        return itemView;
     }
 
     public Context getContext() {
