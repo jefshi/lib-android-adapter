@@ -1,0 +1,46 @@
+ext {
+    // sdk version
+    compileSdkVersion = 28
+    app_minSdkVersion = 19
+    lib_minSdkVersion = 19
+    targetSdkVersion = 28
+
+    // java version
+    sourceCompatibilityVersion = JavaVersion.VERSION_1_8
+    targetCompatibilityVersion = JavaVersion.VERSION_1_8
+
+    dep = [
+            // Android 系统
+            appcompat           : 'androidx.appcompat:appcompat:1.2.0',
+            material            : 'com.google.android.material:material:1.2.1',
+            recyclerview        : 'androidx.recyclerview:recyclerview:1.1.0',
+            constraintlayout    : 'androidx.constraintlayout:constraintlayout:2.0.4',
+            preference          : 'androidx.preference:preference:1.1.1',
+
+            // 测试单元
+            junit_runner        : 'androidx.test.runner.AndroidJUnitRunner',
+            junit               : 'junit:junit:4.13.1',
+            junit_ext           : 'androidx.test.ext:junit:1.1.2',
+            espresso_core       : 'androidx.test.espresso:espresso-core:3.3.0',
+
+            // butterknife
+            butterknife         : 'com.jakewharton:butterknife:10.2.3',
+            butterknife_compiler: 'com.jakewharton:butterknife-compiler:10.2.3',
+
+            // 数据相关
+            gson                : 'com.google.code.gson:gson:2.8.2',
+
+            // rxJava
+            rxjava              : 'io.reactivex.rxjava2:rxjava:2.2.2',
+            rxandroid           : 'io.reactivex.rxjava2:rxandroid:2.1.0',
+
+            // 网络框架
+            retrofit            : 'com.squareup.retrofit2:retrofit:2.4.0',
+            converter_gson      : 'com.squareup.retrofit2:converter-gson:2.4.0',
+            adapter_rxjava2     : 'com.squareup.retrofit2:adapter-rxjava2:2.3.0',
+            logging_interceptor : 'com.squareup.okhttp3:logging-interceptor:3.14.9',
+
+            // 其他
+            XXPermissions       : 'com.github.getActivity:XXPermissions:10.8', // 权限请求框架
+    ]
+}
