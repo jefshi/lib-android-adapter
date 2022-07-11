@@ -11,7 +11,7 @@ Android 列表适配器，支持 RecyclerView
 
 ```
 dependencies {
-    implementation '***:x.x.x'
+    implementation 'io.github.jefshi:lib-adapter-recyclerview:2.0.0'
 }
 ```
 

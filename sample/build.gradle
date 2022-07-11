@@ -14,5 +14,6 @@ dependencies {
      implementation dep.recyclerview
 
     // 其他 Module
-    implementation project(':lib-adapter-recyclerview')
+    // implementation project(':lib-adapter-recyclerview')
+    implementation 'io.github.jefshi:lib-adapter-recyclerview:2.0.0'
 }

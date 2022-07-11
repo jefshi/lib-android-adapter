@@ -3,7 +3,19 @@ apply from: "${rootDir.path}/gradle/build-lib.gradle"
 android {
     defaultConfig {
         versionCode 5
-        versionName "2.0.0"
+        versionName '2.0.0'
+    }
+}
+
+// maven 发布，必须在 android.defaultConfig.versionName 配置之后，以便获取版本名称
+apply from: "${rootDir.path}/gradle/maven_central.gradle"
+uploadArchives {
+    repositories.mavenDeployer {
+        pom.project {
+            name 'lib-adapter-recyclerview'
+            artifactId 'lib-adapter-recyclerview'
+            version android.defaultConfig.versionName
+        }
     }
 }
 

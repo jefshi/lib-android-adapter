@@ -1,0 +1,77 @@
+// maven 插件
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+// 打包的资源内容，关于 javaDoc 部分，至今未找到能用的
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set("sources")
+    from android.sourceSets.main.java.srcDirs
+}
+
+artifacts {
+    archives androidSourcesJar
+}
+
+// GPG 密钥签名，配置信息放【~/.gradle/gradle.properties】
+signing {
+    sign configurations.archives
+}
+
+// maven 打包并上传
+uploadArchives {
+    repositories.mavenDeployer {
+        beforeDeployment {
+            MavenDeployment deployment -> signing.signPom(deployment)
+        }
+
+        repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+            authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+            authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        // pom.xml 标签含义参考：http://www.javashuo.com/article/p-zlitehoa-eg.html
+        pom.project {
+            name POM_ARTIFACT_ID
+            groupId POM_GROUP_ID
+            artifactId POM_ARTIFACT_ID
+            version android.defaultConfig.versionName
+            packaging 'aar'
+
+            description POM_DESCRIPTION
+            url POM_SCM_URL
+
+            // 配置代码库，为 Maven 站点和其它插件使用
+            scm {
+                url POM_SCM_URL
+                developerConnection POM_SCM_CONNECTION
+                connection POM_SCM_CONNECTION
+            }
+
+            // 证书
+            licenses {
+                license {
+                    name 'The Apache License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+
+            // 开发者信息
+            developers {
+                developer {
+                    id POM_DEVELOPER_ID
+                    name POM_DEVELOPER_NAME
+                    email '-'
+                }
+            }
+        }
+
+        doLast {
+            println "【${project.name}】项目，【${repository.authentication.userName}】用户，" +
+                    "成功往【${repository.url}】发布版本：${pom.groupId}:${pom.artifactId}:${pom.version}"
+        }
+    }
+}
