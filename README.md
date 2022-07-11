@@ -7,7 +7,6 @@ Android 列表适配器，支持 RecyclerView
 3. 头尾布局（装饰者模式）
 
 ## 依赖
-这个还在摸索中，望大神指教，尽快弄成以下形式：
 
 ```
 dependencies {
@@ -15,9 +14,13 @@ dependencies {
 }
 ```
 
-## andoridx
+目前仅发布到 Maven Central 仓库
 
-androidx 的使用和源码，请切换到 androidx 分支
+``` gradle
+repositories {
+    mavenCentral()
+}
+```
 
 ## 外围使用：
 [sample - MainActivity](./sample/src/main/java/com/csp/sample/adapter/MainActivity.java)
